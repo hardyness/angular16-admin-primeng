@@ -25,6 +25,11 @@ export class AppMenuComponent implements OnInit {
           { label: 'Pekerjaan', icon: 'pi pi-fw pi-tablet', routerLink: ['/pekerjaan'] },
           { label: 'Jaminan', icon: 'pi pi-fw pi-key', routerLink: ['/jaminan'] },
           { label: 'Golongan', icon: 'pi pi-fw pi-verified', routerLink: ['/golongan'] },
+          { label: 'Struktur', icon: 'pi pi-fw pi-directions', items: [
+            { label: 'Struktur 1',routerLink: ['/'] },
+            { label: 'Struktur 2',routerLink: ['/'] },
+            { label: 'Struktur 3',routerLink: ['/'] },
+          ]}
         ]
       },
       // {

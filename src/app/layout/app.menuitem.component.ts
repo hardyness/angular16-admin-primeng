@@ -108,7 +108,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     }
 
     itemClick(event: Event) {
-        if (this.item.routerLink[0] !== this.router.url){
+        if (this.item.routerLink !== undefined && this.item.routerLink[0] !== this.router.url){
           localStorage.removeItem('search_history');
           this.layoutService.resetSearch();
         }
