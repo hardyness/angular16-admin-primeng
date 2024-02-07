@@ -1,27 +1,33 @@
 # cmssouvenirwebadmin
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4.
+Proyek ini menggunakan [Angular CLI](https://github.com/angular/angular-cli) versi 16 dan seterusnya.
 
-## Development server
+## Server Pengembangan
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+kalau baru pertamakali download/akses, ketik di terminal "npm i"
 
-## Code scaffolding
+Jalankan `ng serve` untuk server pengembangan. Buka di browser ke `http://localhost:4200/`. Aplikasi akan secara otomatis reload jika ada perubahan pada berkas sumber.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Scaffolding Kode
 
-## Build
+Jalankan `ng generate component nama-komponen` untuk membuat komponen baru. Anda juga dapat menggunakan `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Buat
 
-## Running unit tests
+Jalankan `ng build` untuk membangun proyek. Artefak bangunan akan disimpan di direktori `dist/`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Menjalankan Uji Unit
 
-## Running end-to-end tests
+Jalankan `ng test` untuk menjalankan uji unit melalui [Karma](https://karma-runner.github.io).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Menjalankan Uji End-to-End
 
-## Further help
+Jalankan `ng e2e` untuk menjalankan uji end-to-end melalui platform pilihan Anda. Untuk menggunakan perintah ini, Anda perlu menambahkan paket yang mengimplementasikan kemampuan uji end-to-end.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Bantuan Lebih Lanjut
+
+Untuk mendapatkan bantuan lebih lanjut mengenai Angular CLI, gunakan `ng help` atau kunjungi halaman [Angular CLI Overview and Command Reference](https://angular.io/cli).
+
+Pokoknya kalo ada perubahan dari Ai, clonning aja dari sini
+
+CC. Kudil, Dinda, Rizqi
