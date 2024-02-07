@@ -1,10 +1,10 @@
-# cmssouvenirwebadmin
+# KBM MASTER V4 - FRONT END -ANGULAR
 
 Proyek ini menggunakan [Angular CLI](https://github.com/angular/angular-cli) versi 16 dan seterusnya.
 
-## Server Pengembangan
+## Server Pengembangan 
 
-kalau baru pertamakali download/akses, ketik di terminal "npm i"
+kalau baru pertamakali download/akses, ketik di terminal `npm i`
 
 Jalankan `ng serve` untuk server pengembangan. Buka di browser ke `http://localhost:4200/`. Aplikasi akan secara otomatis reload jika ada perubahan pada berkas sumber.
 
@@ -15,10 +15,6 @@ Jalankan `ng generate component nama-komponen` untuk membuat komponen baru. Anda
 ## Buat
 
 Jalankan `ng build` untuk membangun proyek. Artefak bangunan akan disimpan di direktori `dist/`.
-
-## Menjalankan Uji Unit
-
-Jalankan `ng test` untuk menjalankan uji unit melalui [Karma](https://karma-runner.github.io).
 
 ## Menjalankan Uji End-to-End
 
@@ -31,3 +27,7 @@ Untuk mendapatkan bantuan lebih lanjut mengenai Angular CLI, gunakan `ng help` a
 Pokoknya kalo ada perubahan dari Ai, clonning aja dari sini
 
 CC. Kudil, Dinda, Rizqi
+
+## Repositor Perubahan
+
+Kudil, Dinda, Rizqi lapor ke Ai
