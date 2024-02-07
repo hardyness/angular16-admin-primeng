@@ -69,6 +69,7 @@ export class JaminanComponent {
   unvalid = false;
   InfiniteData = false;
   scrollTable: any;
+  subLayout: any;
 
   constructor(
     private api: ApiService,
@@ -86,7 +87,7 @@ export class JaminanComponent {
       namaJaminan: ['', [Validators.required]],
     });
     await this.loadStorage()
-    this.layoutservice.emittersearch$.subscribe(data => {
+    this.subLayout = this.layoutservice.emittersearch$.subscribe(data => {
       if (data !== ''){
         this.emitsearch(data)
       }
@@ -107,6 +108,10 @@ export class JaminanComponent {
         this.listData();
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.subLayout.unsubscribe();
   }
 
   async loadStorage(){

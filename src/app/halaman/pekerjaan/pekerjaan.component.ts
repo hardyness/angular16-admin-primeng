@@ -69,6 +69,7 @@ export class PekerjaanComponent {
   unvalid = false;
   InfiniteData = false;
   scrollTable: any;
+  subLayout: any;
 
   constructor(
     private api: ApiService,
@@ -86,7 +87,7 @@ export class PekerjaanComponent {
       namaPekerjaan: ['', [Validators.required]],
     });
     await this.loadStorage()
-    this.layoutservice.emittersearch$.subscribe(data => {
+    this.subLayout = this.layoutservice.emittersearch$.subscribe(data => {
       if (data !== ''){
         this.emitsearch(data)
       }
@@ -104,6 +105,10 @@ export class PekerjaanComponent {
         this.listData();
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.subLayout.unsubscribe();
   }
 
   async loadStorage(){

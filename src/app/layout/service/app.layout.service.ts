@@ -146,7 +146,7 @@ export class LayoutService {
 
     async resetSearch(){
       this.cari = '';
-      this.emittersearch.next(this.cari);
+      this.emitSearch();
     }
 
   }
