@@ -24,7 +24,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { KantorComponent } from './kantor/kantor.component';
 import { PekerjaanComponent } from './pekerjaan/pekerjaan.component';
 import { JaminanComponent } from './jaminan/jaminan.component';
-import { GolonganComponent } from './golongan/golongan.component'
+import { GolonganComponent } from './golongan/golongan.component';
+import { StrukturModule } from './struktur/struktur.module';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { GolonganComponent } from './golongan/golongan.component'
     PrimekitModule,
     InfiniteScrollModule,
     ProdukModule,
+    StrukturModule,
     NgSelectModule,
     CustomautofocusModule,
     GoogleMapsModule

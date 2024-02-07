@@ -26,9 +26,9 @@ export class AppMenuComponent implements OnInit {
           { label: 'Jaminan', icon: 'pi pi-fw pi-key', routerLink: ['/jaminan'] },
           { label: 'Golongan', icon: 'pi pi-fw pi-verified', routerLink: ['/golongan'] },
           { label: 'Struktur', icon: 'pi pi-fw pi-directions', items: [
-            { label: 'Struktur 1',routerLink: ['/'] },
-            { label: 'Struktur 2',routerLink: ['/'] },
-            { label: 'Struktur 3',routerLink: ['/'] },
+            { label: 'Struktur 1',routerLink: ['/struktur1'] },
+            { label: 'Struktur 2',routerLink: ['/struktur2'] },
+            { label: 'Struktur 3',routerLink: ['/struktur3'] },
           ]}
         ]
       },
