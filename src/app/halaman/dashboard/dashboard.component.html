@@ -1,0 +1,90 @@
+<p-toast></p-toast>
+<p-confirmDialog [rejectVisible]="false" [closable]="false" [style]="{width: '50vw'}"></p-confirmDialog>
+
+<!-- loading -->
+<div
+  *ngIf="pageSukses == false && pageGagal == false"
+  class="flex justify-content-center align-items-start w-full h-screen flex-column"
+>
+  <p-skeleton class="w-8 mb-4" height="30px"></p-skeleton>
+  <p-skeleton class="w-8 mb-4" height="75px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="150px"></p-skeleton>
+  <p-skeleton class="w-12" height="150px"></p-skeleton>
+</div>
+
+<!-- errorPage -->
+<div
+  class="grid flex flex-column justify-content-center align-items-center w-full h-screen"
+  *ngIf="pageGagal"
+>
+  <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+  <b>Opps, terjadi kesalahan!</b>
+  <p>Coba periksa koneksi internet anda lalu ulangi kembali</p>
+  <button
+    type="button"
+    label="Ulangi"
+    pButton
+    pRipple
+    class="p-button-text p-button-rounded"
+    icon="pi pi-refresh"
+    style="color: rgb(34, 155, 7)"
+    *ngFor="let error of load"
+    (click)="reload(error.tipe, '')"
+  ></button>
+</div>
+
+<div class="grid" *ngIf="pageSukses">
+  <div class="col-12 lg:col-6 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Pengunjung</span>
+          <div class="text-900 font-medium text-xl">{{pengunjung}}</div>
+        </div>
+        <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+          <i class="pi pi-eye text-blue-500 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Katalog</span>
+          <div class="text-900 font-medium text-xl">{{katalog}}</div>
+        </div>
+        <div class="flex align-items-center justify-content-center bg-orange-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+          <i class="pi pi-inbox text-orange-500 text-xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 xl:col-4">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">Produk</span>
+          <div class="text-900 font-medium text-xl">{{produk}}</div>
+        </div>
+        <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+          <i class="pi pi-shopping-bag text-cyan-500 text-xl"></i>
+        </div>
+      </div>
+      <!-- <span class="text-green-500 font-medium">520  </span>
+      <span class="text-500">newly registered</span> -->
+    </div>
+  </div>
+
+  <div class="col-12 xl:col-12">
+    <div class="card">
+      <h5>Grafik Pengunjung Website</h5>
+      <div class="scrolling-wrapper"> 
+        <div class="grafik-height">
+          <p-chart type="bar" [width]="widthchart" [height]="heightchart" [data]="chartData" [options]="chartOptions" [responsive]="true"></p-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

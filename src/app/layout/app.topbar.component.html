@@ -1,0 +1,66 @@
+<p-confirmDialog [closable]="false" [style]="scrWidth >= 425 ? {width: '50vw'} : {width: '80vw'}"></p-confirmDialog>
+<div class="layout-topbar bgtopbar">
+    <a class="layout-topbar-logo" routerLink="/dashboard" *ngIf="scrWidth >= 768">
+        <img src="assets/layout/images/cmskbmlogo.png" alt="logo">
+        <!-- <span>Cordova Souvenir</span> -->
+    </a>
+
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()" *ngIf="!showfullSearch">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button class="p-link layout-menu-button layout-topbar-button"  *ngIf="scrWidth < 768" [ngClass]="showfullSearch ? 'm-l-16 ' : 'ml-auto'" (click)="showfullSearch = !showfullSearch">
+      <i [class]="showfullSearch ? 'pi pi-times' : 'pi pi-search'"></i>
+    </button>
+
+    <p-breadcrumb [ngClass]="scrWidth >= 768 ? 'ml-auto' : 'm-l-16 '" class="fs-14 font-bold" [model]="items" *ngIf="!showfullSearch"></p-breadcrumb>
+
+    <span class="p-input-icon-left ml-auto float-end" *ngIf="scrWidth >= 768">
+      <i class="pi pi-search" ></i>
+      <input
+        #searchInput
+        pInputText
+        type="text"
+        class="p-inputtext-sm border-radius-10 fs-9"
+        placeholder="Cari data"
+        pTooltip="tekan enter ⏎ untuk mencari"
+        tooltipEvent="focus"
+        tooltipPosition="top"
+        life="3000"
+        [(ngModel)]="layoutService.cari"
+        (ngModelChange)="layoutService.search($event)"
+        (keyup.enter)="layoutService.emitSearch()"
+      />
+    </span>
+
+    <span class="p-input-icon-left ml-auto w-10" *ngIf="showfullSearch">
+      <i class="pi pi-search" ></i>
+      <input
+        #searchInput
+        pInputText
+        type="text"
+        class="p-inputtext-sm border-radius-10 fs-9 w-10"
+        placeholder="Cari data"
+        pTooltip="tekan enter ⏎ untuk mencari"
+        tooltipEvent="focus"
+        tooltipPosition="top"
+        life="3000"
+        [(ngModel)]="layoutService.cari"
+        (ngModelChange)="layoutService.search($event)"
+        (keyup.enter)="layoutService.emitSearch()"
+        appCustomautofocus
+      />
+    </span>
+
+    <button *ngIf="!showfullSearch" #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div *ngIf="!showfullSearch" #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+        <button class="p-link layout-topbar-button" (click)="logout()">
+          <i class="pi pi-sign-out fs-12"></i>
+          <span class="fs-11">Keluar</span>
+        </button>
+    </div>
+</div>

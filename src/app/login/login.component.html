@@ -1,0 +1,89 @@
+<p-toast position="top-center" preventOpenDuplicates="false"></p-toast>
+
+<div
+  class="flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden pd-8 bgloginscrn">
+  <div class="flex flex-column align-items-center justify-content-center" style="border-radius:1rem;  padding: 1rem 1rem 1rem 2rem; box-shadow: 3px 4px 6px rgba(0, 0, 0, 0.071); background-color: rgba(108, 166, 250, 0.23); backdrop-filter: blur(10px);">
+    <div
+      class="grid flex flex-column justify-content-center align-items-center pd-t-16"
+      style="max-width: 600px !important"
+      *ngIf="pageGagal"
+    >
+      <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+      <b class="text-white-alpha-90">Opps, terjadi kesalahan!</b>
+      <p class="text-white-alpha-90 text-center">Coba periksa koneksi internet anda lalu ulangi kembali</p>
+      <button
+        type="button"
+        label="Ulangi"
+        pButton
+        pRipple
+        class="p-button-text p-button-rounded"
+        icon="pi pi-refresh"
+        style="color: rgb(34, 155, 7)"
+        *ngFor="let error of load"
+        (click)="reload(error.tipe, '')"
+      ></button>
+    </div>
+    <div *ngIf="!pageGagal">
+      <div class="row">
+        <div class="col-md-6 bglogin" style="border-radius: 1rem 0rem 0rem 1rem;"></div>
+        <div class="col-md-6">
+          <img
+            src="assets/layout/images/cmskbmlogo.png"
+            class="w-12"
+          />
+          <form
+            [formGroup]="formLogin"
+            (keyup.enter)="login()"
+            *ngIf="!pageGagal"
+          >
+            <label
+              for="username"
+              class="block text-900 text-l font-medium mb-2 text-white-alpha-80"
+              >Username</label
+            >
+            <input
+              id="username"
+              type="text"
+              [(ngModel)]="username"
+              formControlName="nama"
+              placeholder="Username"
+              pInputText
+              class="w-full mb-5 p-inputtext-sm border-radius-10"
+              [readOnly]="loadingButton"
+              autocomplete
+            />
+            <label
+              for="password"
+              class="block text-900 text-l font-medium mb-2 text-white-alpha-80"
+              >Password</label
+            >
+            <p-password
+              id="password"
+              [(ngModel)]="password"
+              placeholder="Password"
+              formControlName="password"
+              [toggleMask]="true"
+              [feedback]="false"
+              styleClass="mb-5 w-12"
+              inputStyleClass="w-full p-inputtext-sm border-radius-10"
+              [disabled]="loadingButton"
+              #passWord
+            ></p-password>
+          </form>
+
+          <button
+            *ngIf="!pageGagal"
+            pButton
+            pRipple
+            class="w-12"
+            label="Login"
+            [disabled]="!formLogin.valid"
+            [loading]="loadingButton"
+            (click)="login()"
+            style="border-radius: 0rem 0rem 1rem 0rem;"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

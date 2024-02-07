@@ -1,0 +1,199 @@
+/* You can add global styles to this file, and also import other style files */
+
+$gutter: 1rem; //for primeflex grid system
+@import "assets/layout/styles/layout/layout.scss";
+
+/* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+
+/* Demos */
+@import "assets/demo/styles/flags/flags.css";
+@import "assets/demo/styles/badges.scss";
+@import "assets/demo/styles/code.scss";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.bgloginscrn {
+  background: url('assets/bg/bglogin.jpg');
+}
+
+.bglogin {
+  background: url('assets/bg/hampers1.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
+.bgsidebar {
+  background: url('assets/bg/bg-sidebar.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  background-color: white;
+}
+
+// .bgtopbar {
+//   background: url('assets/bg/badak-sidebar.png');
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   background-position: center;
+//   background-color: white;
+// }
+
+
+@for $i from 1 through 40 {
+  .border-radius-#{$i} {
+    border-radius: #{$i}px !important;
+    --border-radius: #{$i}px !important;
+  }
+}
+
+@for $i from 1 through 40 {
+  .border-radius-b-#{$i} {
+    border-bottom-left-radius: #{$i}px !important;
+    border-bottom-right-radius: #{$i}px !important;
+    --border-bottom-left-radius: #{$i}px !important;
+    --border-bottom-right-radius: #{$i}px !important;
+  }
+}
+
+@for $i from 1 through 40 {
+  .border-radius-t-#{$i} {
+    border-top-left-radius: #{$i}px !important;
+    border-top-right-radius: #{$i}px !important;
+    --border-top-left-radius: #{$i}px !important;
+    --border-top-right-radius: #{$i}px !important;
+  }
+}
+
+
+
+@for $i from 1 through 40 {
+  .fs-#{$i} {
+    font-size: #{$i}px !important;
+  }
+}
+
+@media screen and (min-width: 320px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px - 1.5px) !important;
+    }
+  }
+}
+
+@media screen and (min-width: 375px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px + 0.5px) !important;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px + 1.3px) !important;
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px + 2.2px) !important;
+    }
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px + 4px) !important;
+    }
+  }
+}
+
+@media screen and (min-width: 2560px) {
+  @for $i from 1 through 40 {
+    .fs-#{$i} {
+      font-size: calc(#{$i}px + 6px) !important;
+    }
+  }
+}
+
+@for $i from 0 through 40 {
+  .pd-#{$i} {
+    padding: #{$i}px !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .pd-t-b-#{$i} {
+    padding-top: #{$i}px  !important;
+    padding-bottom: #{$i}px  !important;
+  }
+}
+
+
+@for $i from 0 through 40 {
+  .pd-l-#{$i} {
+    padding-left: #{$i}px  !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .pd-r-#{$i} {
+    padding-right: #{$i}px  !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .pd-t-#{$i} {
+    padding-top: #{$i}px  !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .pd-b-#{$i} {
+    padding-bottom: #{$i}px  !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-#{$i} {
+    margin: #{$i}px !important;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-t-b-#{$i} {
+    margin-top: #{$i}px;
+    margin-bottom: #{$i}px;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-l-#{$i} {
+    margin-left: #{$i}px;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-r-#{$i} {
+    margin-right: #{$i}px;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-t-#{$i} {
+    margin-top: #{$i}px;
+  }
+}
+
+@for $i from 0 through 40 {
+  .m-b-#{$i} {
+    margin-bottom: #{$i}px;
+  }
+}

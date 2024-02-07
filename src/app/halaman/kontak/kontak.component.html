@@ -1,0 +1,145 @@
+<p-toast></p-toast>
+<p-confirmDialog [rejectVisible]="false" [closable]="false" [style]="{width: '50vw'}"></p-confirmDialog>
+
+<!-- loading -->
+<div
+  *ngIf="pageSukses == false && pageGagal == false"
+  class="flex justify-content-center align-items-start w-full h-screen flex-column">
+  <p-skeleton class="w-8 mb-4" height="30px"></p-skeleton>
+  <p-skeleton class="w-8 mb-4" height="75px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="150px"></p-skeleton>
+  <p-skeleton class="w-12" height="150px"></p-skeleton>
+</div>
+
+<!-- errorPage -->
+<div
+  class="grid flex flex-column justify-content-center align-items-center w-full h-screen"
+  *ngIf="pageGagal">
+  <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+  <b>Opps, terjadi kesalahan!</b>
+  <p>Coba periksa koneksi internet anda lalu ulangi kembali</p>
+  <button
+    type="button"
+    label="Ulangi"
+    pButton
+    pRipple
+    class="p-button-text p-button-rounded"
+    icon="pi pi-refresh"
+    style="color: rgb(34, 155, 7)"
+    *ngFor="let error of load"
+    (click)="reload(error.tipe, '')">
+  </button>
+</div>
+
+<div class="grid" *ngIf="pageSukses">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header align-items-center justify-content-between flex">
+        <h5 class="m-0 inline fs-12">Kontak Kami</h5>
+        <p-button
+          *ngIf="!onedit"
+          icon="pi pi-file-edit"
+          label="Edit"
+          (click)="onedit = !onedit">
+        </p-button>
+      </div>
+      <p-divider>
+        <i class="bx bx-map fs-10 m-r-8"></i>
+        <b>Alamat</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{alamat}}
+      </p>
+      <input *ngIf="onedit" type="text" pInputText [(ngModel)]="alamat" appCustomautofocus/>
+      <p-divider>
+        <i class="bx bx-phone fs-10 m-r-8"></i>
+        <b>Nomor Telepon</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{telephone}}
+      </p>
+      <p-inputMask *ngIf="onedit" styleClass="w-12" mask="999-999-999?-9999" [(ngModel)]="telephone"></p-inputMask>
+      <p-divider>
+        <i class="bx bx-envelope fs-10 m-r-8"></i>
+        <b>Email</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{email}}
+      </p>
+      <input *ngIf="onedit" type="email" pInputText [(ngModel)]="email"/>
+      <p-divider>
+        <i class="bx bxl-instagram fs-10 m-r-8"></i>
+        <b>Instagram</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{instagram}}
+      </p>
+      <input *ngIf="onedit" type="text" pInputText [(ngModel)]="instagram"/>
+      <p-divider>
+        <i class="bx bxl-facebook fs-10 m-r-8"></i>
+        <b>Facebook</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{facebook}}
+      </p>
+      <input *ngIf="onedit" type="text" pInputText [(ngModel)]="facebook"/>
+      <p-divider>
+        <i class="bx bxl-tiktok fs-10 m-r-8"></i>
+        <b>Tiktok</b>
+      </p-divider>
+      <p *ngIf="!onedit">
+        {{tiktok}}
+      </p>
+      <input *ngIf="onedit" type="text" pInputText [(ngModel)]="tiktok"/>
+      <p-divider>
+        <i class="bx bx-map-alt fs-10 m-r-8"></i>
+        <b>Koordinat Alamat</b>
+      </p-divider>
+      <div class="flex" *ngIf="!onedit">
+        <p>
+          Lat : <p-tag [value]="lat"></p-tag>
+        </p>
+        <p class="m-l-16">
+          Lng : <p-tag [value]="lng"></p-tag>
+        </p>
+      </div>
+      <div class="flex flex-wrap justify-content-start gap-3 m-b-6" *ngIf="onedit">
+        <label for="lat">Lat :</label>
+        <input type="text" id="lat" pInputText [(ngModel)]="lat"/>
+        <label for="lng">Lng :</label>
+        <input type="text" id="lng" pInputText [(ngModel)]="lng"/>
+      </div>
+      
+      <div class="map">
+        <google-map height="300px" width="100%" [options]="mapOptions" [zoom]="19" (mapClick)="addMarker($event)">
+          <map-marker *ngFor="let position of markerPosition" [position]="position"></map-marker>
+        </google-map>
+      </div>
+      <div class="mt-5 text-end" *ngIf="!formGagal && onedit">
+        <p-button
+          styleClass="m-r-8 p-button-danger"
+          icon="pi pi-times"
+          label="Batal"
+          (click)="onedit = false; listData()"
+          [loading]="loadingButton">
+        </p-button>
+        <p-button
+          icon="pi pi-check"
+          label="Simpan Perubahan"
+          (click)="perbarui()"
+          [loading]="loadingButton">
+        </p-button>
+      </div>
+      <div class="mt-5 text-end" *ngIf="formGagal && onedit">
+        <p-button
+          icon="pi pi-refresh"
+          label="Ulangi"
+          severity="warning"
+          *ngFor="let error of load"
+          (click)="reload(error.tipe, '')"
+          [loading]="loadingButton">
+        </p-button>
+      </div>
+    </div>
+  </div>
+</div>

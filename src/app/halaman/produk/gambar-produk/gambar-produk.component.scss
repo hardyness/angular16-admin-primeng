@@ -1,0 +1,62 @@
+.frametambah {
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  border: solid 3px #5a56568d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  i:hover {
+    color: rgb(6, 180, 6)
+  }
+}
+
+.gambarbaru {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+
+.icontambah {
+  color: green;
+  font-size: 2rem;
+}
+
+p-fileupload-buttonbar {
+  size: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.gambarsalah {
+  background: red;
+  color: white;
+  padding: 5px 5px 5px 16px;
+  border-radius: 16px;
+}
+
+::ng-deep .p-galleria-thumbnail-items.p-items-hidden .p-galleria-thumbnail-item {
+  visibility: visible;
+}
+
+::ng-deep p-galleriacontent {
+  width: 100%
+}
+
+::ng-deep p-galleriaitem img {
+  object-fit: contain;
+  height: 80vh;
+}
+
+::ng-deep .p-button-label {
+  white-space: nowrap;
+}
+
+::ng-deep .p-galleria-close {
+  z-index: 100002;
+}
