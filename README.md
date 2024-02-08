@@ -1,6 +1,7 @@
 # KBM MASTER V4 - FRONT END -ANGULAR
 
 Proyek ini menggunakan [Angular CLI](https://github.com/angular/angular-cli) versi 16 dan seterusnya.
+Dokumentasi UI lihat https://primeng.org/installation 
 
 ## Server Pengembangan 
 
