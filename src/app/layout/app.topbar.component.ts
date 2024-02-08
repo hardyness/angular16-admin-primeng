@@ -25,6 +25,7 @@ export class AppTopBarComponent {
     showfullSearch: boolean = false;
 
     items: MenuItem[] | undefined;
+    items_ar: any[] = [];
 
     home: MenuItem | undefined;
 
@@ -45,9 +46,12 @@ export class AppTopBarComponent {
       private confirmationService: ConfirmationService,
     ) {    
       this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val: NavigationEnd) => {
+        this.items_ar = [];
         let teksHasil = val.url.slice(1).charAt(0).toUpperCase() + val.url.slice(2);
         this.titlepage = teksHasil;
-        this.items = [{ label: this.titlepage }];
+        this.items_ar.push({label: this.titlepage});
+        this.items = this.items_ar;
+        console.log(this.titlepage);
       });
      }
 

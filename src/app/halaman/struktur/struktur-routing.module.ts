@@ -4,6 +4,7 @@ import { StrukturComponent } from './struktur.component';
 import { Struktur1Component } from './struktur1/struktur1.component';
 import { Struktur2Component } from './struktur2/struktur2.component';
 import { Struktur3Component } from './struktur3/struktur3.component';
+import { TestbreadComponent } from './testbread/testbread.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'struktur3',
     component: Struktur3Component
+  },
+  {
+    path: 'struktur1/testbread',
+    component: TestbreadComponent
   },
 ];
 

@@ -13,10 +13,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { Struktur1Component } from './struktur1/struktur1.component';
 import { Struktur2Component } from './struktur2/struktur2.component';
 import { Struktur3Component } from './struktur3/struktur3.component';
+import { TestbreadComponent } from './testbread/testbread.component';
 
 
 @NgModule({
-  declarations: [StrukturComponent, Struktur1Component, Struktur2Component, Struktur3Component],
+  declarations: [StrukturComponent, Struktur1Component, Struktur2Component, Struktur3Component, TestbreadComponent],
   imports: [
     CommonModule,
     StrukturRoutingModule,
