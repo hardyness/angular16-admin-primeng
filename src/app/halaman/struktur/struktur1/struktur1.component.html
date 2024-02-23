@@ -39,7 +39,7 @@
       <p-progressBar mode="indeterminate" *ngIf="loadingData"></p-progressBar>
       <div
         *ngIf="total !== 0"
-        style="overflow-x: auto; height: 400px"
+        style="overflow-x: auto; height: 420px"
         id="tabel"
         infinite-scroll
         [infiniteScrollDistance]="1"
@@ -92,13 +92,13 @@
                   <ul class="dropdown-menu fs-11">
                     <li class="mb-2" (click)="openPop(item, 2)">
                       <button class="dropdown-item" type="button">
-                        <i class="pi pi-file-edit mr-4 fs-11" style="color: #0eb705"></i>
+                        <i class="pi pi-file-edit mr-4 fs-10" style="color: #0eb705"></i>
                         Perbarui
                       </button>
                     </li>
                     <li (click)="konfirmHapus(item, confirmTarget)">
                       <button class="dropdown-item" type="button">
-                        <i class="pi pi-trash mr-4 fs-11"style="color: red"></i>
+                        <i class="pi pi-trash mr-4 fs-10"style="color: red"></i>
                         Hapus
                       </button>
                     </li>
@@ -166,6 +166,7 @@
           icon="pi pi-download"
           style="color: #404040"
           pTooltip="Download"
+          tooltipPosition="left"
           (click)="downloadexcel()">
         </button>
       </div>
@@ -242,6 +243,7 @@
         [infiniteScrollDisabled]="InfiniteDataselectstruktur3"
         notFoundText="data tidak ditemukan"
         [placeholder]="'Pilih struktur 3'"
+        class="custom-select"
         required
       >
       </ng-select>
@@ -268,6 +270,7 @@
         notFoundText="data tidak ditemukan"
         [placeholder]="'Pilih struktur 2'"
         [readonly]="idselectstruktur3 == undefined || idselectstruktur3 == ''"
+        class="custom-select"
         required
       >
       </ng-select>
@@ -293,6 +296,7 @@
         [infiniteScrollDisabled]="InfiniteDataselectstruktur1"
         notFoundText="data tidak ditemukan"
         [placeholder]="'Pilih struktur 1'"
+        class="custom-select"
         required
       >
       </ng-select>
@@ -312,7 +316,7 @@
       *ngIf="namaForm == 'Perbarui Data Struktur 1'"
       label="Perbarui"
       styleClass="p-button-text"
-      [hidden]="formGagal || formStruktur1.invalid || loadingForm"
+      [disabled]="formGagal || formStruktur1.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="perbarui()"
     ></p-button>

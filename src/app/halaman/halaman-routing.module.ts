@@ -14,6 +14,9 @@ import { KantorComponent } from './kantor/kantor.component';
 import { PekerjaanComponent } from './pekerjaan/pekerjaan.component';
 import { JaminanComponent } from './jaminan/jaminan.component';
 import { GolonganComponent } from './golongan/golongan.component';
+import { PenggunaComponent } from './pengguna/pengguna.component';
+import { GajiLayoutComponent } from './gaji-layout/gaji-layout.component';
+import { HeaderComponent } from './header/header.component';
 
 const routes: Routes = [
   // {
@@ -67,6 +70,18 @@ const routes: Routes = [
   {
     path: 'kontak',
     component: KontakComponent 
+  },
+  {
+    path: 'pengguna',
+    component: PenggunaComponent,
+  },
+  {
+    path: 'gaji-layout',
+    component: GajiLayoutComponent,
+  },
+  {
+    path: 'header',
+    component: HeaderComponent,
   },
   {
     path: '',

@@ -55,18 +55,30 @@
             class="table-light"
           >
             <tr class="fs-11">
-              <th scope="col">Golongan</th>
+              <th scope="col">Nama</th>
+              <th scope="col">Username</th>
+              <th scope="col">Level</th>
+              <th scope="col">Mulai</th>
               <th scope="col">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of isidata">
-              <td colspan="1" *ngIf="loadingHapus == item.idgolongan">
+              <td colspan="4" *ngIf="loadingHapus == item.idlogin">
                 <p-progressBar  mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
-                <b style="color: red;" class="fs-8">Menghapus data {{item.golongan}}</b>
+                <b style="color: red;" class="fs-8">Menghapus data {{item.nama}}</b>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idgolongan">
-                <p>{{ item.golongan }}</p>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idlogin" [id]="item.idlogin">
+                <p>{{ item.nama }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idlogin">
+                <p>{{ item.username }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idlogin">
+                <p>{{ item.levelteks }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idlogin">
+                <p>{{ item.mulai }}</p>
               </td>
               <td style="width: 50px">
                 <div class="btn-group dropstart" #confirmTarget>
@@ -88,6 +100,12 @@
                         Perbarui
                       </button>
                     </li>
+                    <li *ngIf=" item.level === 4 || item.level === 5 "(click)="levelAksesPengguna(item)">
+                    <button class="dropdown-item" type="button">
+                        <i class="pi pi-key mr-4 fs-10" style="color: blue"></i>
+                        Tambah Akses
+                    </button>
+                    </li>
                     <li (click)="konfirmHapus(item, confirmTarget)">
                       <button class="dropdown-item" type="button">
                         <i class="pi pi-trash mr-4 fs-10"style="color: red"></i>
@@ -96,12 +114,30 @@
                     </li>
                   </ul>
                 </div>
-                <p-confirmPopup [key]="item.idgolongan"></p-confirmPopup>
+                <p-confirmPopup [key]="item.idlogin"></p-confirmPopup>
               </td>
             </tr>
           </tbody>
           <tbody *ngIf="!InfiniteData">
             <tr *ngFor="let i of [0, 1]">
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
               <td style="padding-top: 16px; padding-bottom: 16px">
                 <p-skeleton
                   class="w-8 mb-4"
@@ -197,37 +233,93 @@
   </div>
   <!-- successForm -->
   <form
-    [formGroup]="formGolongan"
+    [formGroup]="formPengguna"
     class="mt-3"
-    (keyup.enter)="namaForm == 'Tambah Golongan' ? tambah() : perbarui()"
+    (keyup.enter)="namaForm == 'Tambah Pengguna' ? tambah() : perbarui()"
     *ngIf="!formGagal && !loadingForm"
   >
     <div class="mt-5 flex justify-content-center flex-column">
-      <label htmlFor="golongan" class="font-semibold text-sm">Nama Golongan</label>
+      <label htmlFor="namaPengguna" class="font-semibold text-sm">Nama Pengguna</label>
       <input
         pInputText
-        id="golongan"
-        [(ngModel)]="namaGolongan"
-        formControlName="namaGolongan"
+        id="namaPengguna"
+        [(ngModel)]="namaPengguna"
+        formControlName="namaPengguna"
         class="w-12 border-radius-10"
         appCustomautofocus
+        pattern="[a-zA-Z ]*"
       />
     </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+        <label htmlFor="usernamePengguna" class="font-semibold text-sm">Username Pengguna</label>
+        <input
+          pInputText
+          id="usernamePengguna"
+          [(ngModel)]="usernamePengguna"
+          formControlName="usernamePengguna"
+          class="w-12 border-radius-10"
+          pKeyFilter="alphanum" 
+        />
+      </div>
+      <div class="mt-5 flex justify-content-center flex-column">
+        <label htmlFor="passwordPengguna" class="font-semibold text-sm">Password Pengguna</label>
+        <input
+          pInputText
+          id="passwordPengguna"
+          [(ngModel)]="passwordPengguna"
+          formControlName="passwordPengguna"
+          class="w-12 border-radius-10"
+          (keydown.space)="$event.preventDefault()"
+          (paste)="(false)"
+        />
+      </div>
+      <div class="mt-5 flex justify-content-center flex-column">
+        <label htmlFor="levelPengguna" class="font-semibold text-sm">Pilih Level Pengguna</label>
+          <ng-select
+          [(ngModel)]="selectedLevelPengguna"
+          formControlName="levelPengguna"
+          [items]="dataLevelPengguna"
+          bindValue="idLevelAkses"
+          bindLabel="teksLevelAkses"
+          [virtualScroll]="true"
+          [searchable]="true"
+          (change)="selectedLevel($event)"
+          [loading]="loadingSelect"
+          [infiniteScrollDisabled]="InfiniteDataLevel"
+          appendTo=".p-dialog"
+          notFoundText="data tidak ditemukan"
+          [placeholder]="'Pilih Level Pengguna'"
+          [compareWith]="compareObjects"
+          class="custom-select"
+          required
+        ></ng-select>
+      </div>
+      <div class="mt-5 flex justify-content-center flex-column">
+        <label htmlFor="mulaiPengguna" class="font-semibold text-sm">Waktu Mulai Pengguna</label>
+        <input
+          pInputText
+          id="mulaiPengguna"
+          [(ngModel)]="mulaiPengguna"
+          formControlName="mulaiPengguna"
+          class="w-12 border-radius-10"
+          type="date"
+        />
+      </div>
   </form>
   <ng-template pTemplate="footer">
     <p-button
-      *ngIf="namaForm == 'Tambah Golongan'"
+      *ngIf="namaForm == 'Tambah Pengguna'"
       label="Tambah"
       styleClass="p-button-text"
-      [disabled]="formGagal || formGolongan.invalid || loadingForm"
+      [disabled]="formGagal || formPengguna.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="tambah()"
     ></p-button>
     <p-button
-      *ngIf="namaForm == 'Perbarui Data Golongan'"
+      *ngIf="namaForm == 'Perbarui Data Pengguna'"
       label="Perbarui"
       styleClass="p-button-text"
-      [disabled]="formGagal || formGolongan.invalid || loadingForm"
+      [disabled]="formGagal || formPengguna.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="perbarui()"
     ></p-button>

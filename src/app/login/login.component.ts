@@ -110,7 +110,7 @@ export class LoginComponent {
         } else if (res.status === 99) {
           this.pesanToast('success', res.pesan, '');
           await this.Auth.login(res.idlogin, res.username, res.nama, res.token, res.unik);
-          this.route.navigateByUrl('/dashboard');
+          this.route.navigateByUrl('/kantor');
         }
       }
 

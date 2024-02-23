@@ -16,7 +16,7 @@
 
     <p-breadcrumb [ngClass]="scrWidth >= 768 ? 'ml-auto' : 'm-l-16 '" class="fs-14 font-bold" [model]="items" *ngIf="!showfullSearch"></p-breadcrumb>
 
-    <span class="p-input-icon-left ml-auto float-end" *ngIf="scrWidth >= 768">
+    <span class="p-input-icon-left ml-auto float-end" *ngIf="scrWidth >= 768 && sch == null">
       <i class="pi pi-search" ></i>
       <input
         #searchInput
@@ -34,7 +34,7 @@
       />
     </span>
 
-    <span class="p-input-icon-left ml-auto w-10" *ngIf="showfullSearch">
+    <span class="p-input-icon-left ml-auto w-10" *ngIf="showfullSearch && sch == null">
       <i class="pi pi-search" ></i>
       <input
         #searchInput

@@ -14,12 +14,23 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/demo/styles/code.scss";
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
+.ng-select.custom-select {
+  border:0px;
+  min-height: 0px;
+  border-radius: 10px !important;
+}
+.ng-select.custom-select .ng-select-container  {      
+  border:1px solid #605e5c;      
+  min-height: 0px;
+  border-radius: 10px !important;
+}
+
 .bgloginscrn {
   background: url('assets/bg/bglogin.jpg');
 }
 
 .bglogin {
-  background: url('assets/bg/hampers1.jpg');
+  background: url('assets/bg/sidelogin.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;

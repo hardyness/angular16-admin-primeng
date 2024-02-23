@@ -1,1 +1,279 @@
-<p>struktur3 works!</p>
+<p-toast position="top-center"></p-toast>
+<p-confirmDialog [rejectVisible]="false" [closable]="false" [style]="scrWidth >= 425 ? {width: '50vw'} : {width: '80vw'}"></p-confirmDialog>
+<!-- loading -->
+<div
+  *ngIf="pageSukses == false && pageGagal == false"
+  class="flex align-items-start w-full h-screen flex-column"
+>
+  <p-skeleton class="w-12 mb-4" height="30px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="75px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="150px"></p-skeleton>
+  <p-skeleton class="w-12" height="150px"></p-skeleton>
+</div>
+
+<!-- errorPage -->
+<div
+  class="grid flex flex-column justify-content-center align-items-center w-full h-screen"
+  *ngIf="pageGagal"
+>
+  <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+  <b>Opps, terjadi kesalahan!</b>
+  <p class="fs-10" style="text-align: center;">Coba periksa koneksi internet anda lalu ulangi kembali</p>
+  <button
+    type="button"
+    label="Ulangi"
+    pButton
+    pRipple
+    class="p-button-text p-button-rounded"
+    icon="pi pi-refresh"
+    style="color: rgb(34, 155, 7)"
+    *ngFor="let error of load"
+    (click)="reload(error.tipe, '')"
+  ></button>
+</div>
+
+<!-- successPage -->
+<div class="grid" *ngIf="pageSukses">
+  <div class="col-12">
+    <div class="card">
+      <p-progressBar mode="indeterminate" *ngIf="loadingData"></p-progressBar>
+      <div
+        *ngIf="total !== 0"
+        style="overflow-x: auto; height: 420px"
+        id="tabel"
+        infinite-scroll
+        [infiniteScrollDistance]="1"
+        [infiniteScrollThrottle]="50"
+        [scrollWindow]="false"
+        [infiniteScrollDisabled]="InfiniteData"
+        [immediateCheck]="true"
+        (scrolled)="onScroll(tabel)"
+      >
+        <table class="table table-bordered table-hover">
+          <thead
+            style="position: sticky; top: 0; z-index: 99"
+            class="table-light"
+          >
+            <tr class="fs-11">
+              <th scope="col">Struktur 3</th>
+              <th scope="col">Bagi Hasil</th>
+              <th scope="col">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of isidata">
+              <td colspan="3" *ngIf="loadingHapus == item.idstruktur3">
+                <p-progressBar  mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
+                <b style="color: red;" class="fs-8">Menghapus data {{item.nama}}</b>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idstruktur3">
+                <p>{{ item.nama }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idstruktur3">
+                <p>{{ item.bagihasil }}</p>
+              </td>
+              <td style="width: 50px">
+                <div class="btn-group dropstart" #confirmTarget>
+                  <button 
+                    pButton
+                    pRipple
+                    type="button"
+                    [disabled]="loadingData"
+                    class="p-button-text p-button-rounded p-button-plain" 
+                    data-bs-toggle="dropdown" 
+                    icon="pi pi-ellipsis-v"
+                    style="color: #404040"
+                    aria-expanded="false">
+                  </button>
+                  <ul class="dropdown-menu fs-11">
+                    <li class="mb-2" (click)="openPop(item, 2)">
+                      <button class="dropdown-item" type="button">
+                        <i class="pi pi-file-edit mr-4 fs-10" style="color: #0eb705"></i>
+                        Perbarui
+                      </button>
+                    </li>
+                    <li (click)="konfirmHapus(item, confirmTarget)">
+                      <button class="dropdown-item" type="button">
+                        <i class="pi pi-trash mr-4 fs-10"style="color: red"></i>
+                        Hapus
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <p-confirmPopup [key]="item.idstruktur3"></p-confirmPopup>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!InfiniteData">
+            <tr *ngFor="let i of [0, 1]">
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px">
+                <p-skeleton
+                  class="w-8 mb-4"
+                  height="30px"
+                ></p-skeleton>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        class="card-body flex flex-column align-items-center justify-content-center"
+        *ngIf="total == 0"
+      >
+        <img src="assets/ilustrasi/nodata.png" class="w-3" />
+        <p class="text-2xl fs-10">tidak ada data</p>
+      </div>
+      <div class="card-footer align-items-center flex justify-content-between">
+        <button
+        type="button"
+        pButton
+        pRipple
+        class="p-button-text p-button-rounded p-button-plain"
+        icon="pi pi-plus"
+        style="color: slateblue"
+        pTooltip="Tambah data (ctrl/⌘ + q)"
+        (click)="openPop('', 1)"
+        ></button>
+        <label class="fs-8">Total data: <b>{{total}}</b></label>
+        <button 
+          pButton
+          pRipple
+          type="button" 
+          class="p-button-text p-button-rounded p-button-plain" 
+          icon="pi pi-download"
+          style="color: #404040"
+          pTooltip="Download"
+          tooltipPosition="left"
+          (click)="downloadexcel()">
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [header]="namaForm"
+  [(visible)]="popForm"
+  position="top"
+  [modal]="true"
+  [closable]="!loadingButton"
+  maximizable="true"
+  focusTrap="true"
+  [style]="scrWidth > 425 ? {width: '50vw'} : {width: '100%', height: '100%'}"
+  (onHide)="formKosong()"
+  #d
+>
+  <!-- loading -->
+  <div
+    *ngIf="loadingForm"
+    class="flex justify-content-center align-items-center w-full h-18rem"
+  >
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem"
+      strokeWidth="3"
+    ></p-progressSpinner>
+  </div>
+  <!-- errorForm -->
+  <div
+    class="grid flex flex-column justify-content-center align-items-center w-full h-18rem"
+    *ngIf="formGagal"
+  >
+    <b>Opps, terjadi kesalahan!</b>
+    <p>Coba periksa koneksi internet anda lalu ulangi kembali</p>
+    <button
+      type="button"
+      label="Ulangi"
+      pButton
+      pRipple
+      class="p-button-text p-button-rounded"
+      icon="pi pi-refresh"
+      style="color: rgb(34, 155, 7)"
+      *ngFor="let error of load"
+      (click)="reload(error.tipe, '')"
+    ></button>
+  </div>
+  <!-- successForm -->
+  <form
+    [formGroup]="formStruktur2"
+    class="mt-3"
+    (keyup.enter)="namaForm == 'Tambah Struktur 2' ? tambah() : perbarui()"
+    *ngIf="!formGagal && !loadingForm"
+  >
+
+    <div class="mb-3 flex flex-column justify-content-center">
+      <label class="label font-medium text-sm mb-1 ">Struktur 1</label>
+      <ng-select
+        [(ngModel)]="idselectstruktur1"
+        formControlName="struktur1"
+        [items]="isidataselectstruktur1"
+        bindValue="idstruktur1"
+        bindLabel="nama"
+        appendTo=".p-dialog"
+        (open)="openStruktur1($event)"
+        [virtualScroll]="true"
+        (scrollToEnd)="onScrollingstruktur1()"
+        [searchable]="true"
+        (search)="cariDatastruktur1($event)"
+        (change)="selectedstruktur1($event)"
+        (clear)="clearselect(3)"
+        [loading]="loadingSelect"
+        [infiniteScrollDisabled]="InfiniteDataselectstruktur1"
+        notFoundText="data tidak ditemukan"
+        [placeholder]="'Pilih struktur 1'"
+        class="custom-select"
+        required
+      >
+      </ng-select>
+    </div>
+
+    <div class="mb-3 flex flex-column justify-content-center">
+      <label htmlFor="horizontal" class="label font-medium text-sm mb-1 ">Bagi Hasil</label>
+      <p-inputNumber 
+        [(ngModel)]="bagihasil"
+        formControlName="bagihasil"
+        [min]="1"
+        locale="ID"
+        styleClass="w-12"
+        class="w-12">
+      </p-inputNumber>
+    </div>
+
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button
+      *ngIf="namaForm == 'Tambah Struktur 2'"
+      label="Tambah"
+      styleClass="p-button-text"
+      [disabled]="formGagal || formStruktur2.invalid || loadingForm"
+      [loading]="loadingButton"
+      (click)="tambah()"
+    ></p-button>
+    <p-button
+      *ngIf="namaForm == 'Perbarui Data Struktur 2'"
+      label="Perbarui"
+      styleClass="p-button-text"
+      [disabled]="formGagal || formStruktur2.invalid || loadingForm"
+      [loading]="loadingButton"
+      (click)="perbarui()"
+    ></p-button>
+  </ng-template>
+</p-dialog>

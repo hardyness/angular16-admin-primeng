@@ -340,7 +340,6 @@ export class Struktur1Component {
   }
 
   async selectStruktur2(){
-    console.log(this.idselectstruktur3)
     this.loadingSelect2 = true;
     return new Promise (resolve => {
       const param = new FormData();
@@ -811,7 +810,7 @@ export class Struktur1Component {
 
   async selectedstruktur1(e){
     if (e !== undefined){
-      this.idselectstruktur1 = e.idstruktur1;
+      this.idselectstruktur1 = e.struktur1;
       this.selectstruktur1text = e.nama;
     }
   }

@@ -39,7 +39,7 @@
       <p-progressBar mode="indeterminate" *ngIf="loadingData"></p-progressBar>
       <div
         *ngIf="total !== 0"
-        style="overflow-x: auto; height: 400px"
+        style="overflow-x: auto; height: 420px"
         id="tabel"
         infinite-scroll
         [infiniteScrollDistance]="1"
@@ -84,13 +84,13 @@
                   <ul class="dropdown-menu fs-11">
                     <li class="mb-2" (click)="openPop(item, 2)">
                       <button class="dropdown-item" type="button">
-                        <i class="pi pi-file-edit mr-4 fs-11" style="color: #0eb705"></i>
+                        <i class="pi pi-file-edit mr-4 fs-10" style="color: #0eb705"></i>
                         Perbarui
                       </button>
                     </li>
                     <li (click)="konfirmHapus(item, confirmTarget)">
                       <button class="dropdown-item" type="button">
-                        <i class="pi pi-trash mr-4 fs-11"style="color: red"></i>
+                        <i class="pi pi-trash mr-4 fs-10"style="color: red"></i>
                         Hapus
                       </button>
                     </li>
@@ -146,6 +146,7 @@
           icon="pi pi-download"
           style="color: #404040"
           pTooltip="Download"
+          tooltipPosition="left"
           (click)="downloadexcel()">
         </button>
       </div>
@@ -226,7 +227,7 @@
       *ngIf="namaForm == 'Perbarui Data Jaminan'"
       label="Perbarui"
       styleClass="p-button-text"
-      [hidden]="formGagal || formJaminan.invalid || loadingForm"
+      [disabled]="formGagal || formJaminan.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="perbarui()"
     ></p-button>

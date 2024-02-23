@@ -14,7 +14,7 @@ const sesilogin = 'masterkbmv4_login';
   providedIn: 'root'
 })
 export class ApiService {
-  server: string = "http://192.168.1.11:9000/master/";
+  server: string = "http://192.168.0.44:9000/master/";
   forbiddenWords = ['Kunyuk','Bajingan','Asu','Bangsat','Kampret','Kontol','Memek','Ngentot','Pentil','Perek','Pepek','Pecun','Bencong','Banci','Maho','Gila','Sinting','Tolol','Sarap','Setan','Lonte','Hencet','Taptei','Kampang','Pilat','Keparat','Bejad','Gembel','Brengsek','Tai','Anjrit','Bangsat','Fuck','Tetek','Ngulum','Jembut','Totong','Kolop','Pukimak','Bodat','Heang','Jancuk','Burit','Titit','Nenen','Bejat','Silit','Sempak','Fucking','Asshole','Bitch','Penis','Vagina','Klitoris','Kelentit','Borjong','Dancuk','Pantek','Taek','Itil','Teho','Bejat','Pantat','Bagudung','Babami','Kanciang','Bungul','Idiot','Kimak','Henceut','Kacuk','Blowjob','Pussy','Dick','Damn','Ass', 'Goblok', 'jalil'];
 
   
@@ -32,7 +32,7 @@ export class ApiService {
   postData(parameter, file, {headers}): Observable<any> {
     return this.http.post(this.server + file, parameter, {headers}).pipe(
       map(res => res),
-      timeout(15000),
+      timeout(15000) 
     )
   }
 
@@ -105,7 +105,7 @@ export class ApiService {
     const lastSegment = segments[segments.length - 1];
     const words = lastSegment.split('-');
     const formattedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    this.title.setTitle(formattedWords + ' | CMS Admin Souvenir');
+    this.title.setTitle(formattedWords + ' | KBM Master');
   }
 
   setCustomtitle(t){

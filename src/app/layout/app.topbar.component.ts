@@ -19,6 +19,7 @@ export class AppTopBarComponent {
       this.scrWidth = window.innerWidth;
     }
 
+    sch: any;
     search: any;
     urlnow: any;
     titlepage: any;
@@ -45,15 +46,35 @@ export class AppTopBarComponent {
       private location: Location,
       private confirmationService: ConfirmationService,
     ) {    
-      this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val: NavigationEnd) => {
-        this.items_ar = [];
-        let teksHasil = val.url.slice(1).charAt(0).toUpperCase() + val.url.slice(2);
-        this.titlepage = teksHasil;
-        this.items_ar.push({label: this.titlepage});
-        this.items = this.items_ar;
-        console.log(this.titlepage);
-      });
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val: NavigationEnd) => {
+          this.items_ar = [];
+          this.titlepage = this.getPageTitle(this.router.url);
+          this.items_ar = this.titlepage.split(' - ').map((item, index) => ({ id: index + 1,label: item, styleClass: 'fs-12'}));
+          this.items = this.items_ar;
+          setTimeout(() => {
+            this.sch = localStorage.getItem('schstatus');
+            console.log(this.sch);
+          }, 300);
+ 
+        });
      }
+
+     private getPageTitle(url: string): string {
+      const pathSegments = this.location.path().split('/').filter(Boolean);
+      const queryParams = new URLSearchParams(url.split('?')[1]);
+      const firstSegment = pathSegments[0]?.charAt(0).toUpperCase() + pathSegments[0]?.slice(1);
+      const secondSegment = this.removeDash(pathSegments[1]);
+      const titleSegments = [firstSegment, secondSegment].filter(Boolean);
+      return titleSegments.join(' - ');
+    }
+
+    private removeDash(text: string): any {
+      if (text !== undefined){
+        return text.split('-')
+        .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
+        .join(' ');
+      }
+    }
 
     async ngOnInit() {
       await this.getScreenSize();

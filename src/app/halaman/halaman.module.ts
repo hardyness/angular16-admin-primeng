@@ -8,7 +8,6 @@ import { HalamanComponent } from './halaman.component';
 import { KategoriProdukComponent } from './kategori-produk/kategori-produk.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ProdukComponent } from './produk/produk.component';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { NgSelectModule } from '@ng-select/ng-select';
 import { KategoriKatalogComponent } from './kategori-katalog/kategori-katalog.component';
@@ -26,11 +25,14 @@ import { PekerjaanComponent } from './pekerjaan/pekerjaan.component';
 import { JaminanComponent } from './jaminan/jaminan.component';
 import { GolonganComponent } from './golongan/golongan.component';
 import { StrukturModule } from './struktur/struktur.module';
+import { PenggunaModule } from './pengguna/pengguna.module';
+import { GajiLayoutComponent } from './gaji-layout/gaji-layout.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent, HalamanComponent, KategoriProdukComponent, KategoriKatalogComponent, KatalogComponent, TentangKamiComponent, SeoComponent, PengunjungComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent
+    DashboardComponent, HalamanComponent, KategoriProdukComponent, KategoriKatalogComponent, KatalogComponent, TentangKamiComponent, SeoComponent, PengunjungComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +42,7 @@ import { StrukturModule } from './struktur/struktur.module';
     InfiniteScrollModule,
     ProdukModule,
     StrukturModule,
+    PenggunaModule,
     NgSelectModule,
     CustomautofocusModule,
     GoogleMapsModule

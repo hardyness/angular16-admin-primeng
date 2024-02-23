@@ -89,7 +89,7 @@
       </div>
       <div
         *ngIf="total !== 0"
-        style="overflow-x: auto; height: 400px"
+        style="overflow-x: auto; height: 420px"
         id="tabel"
         infinite-scroll
         [infiniteScrollDistance]="1"
@@ -242,6 +242,7 @@
           icon="pi pi-download"
           style="color: #404040"
           pTooltip="Download"
+          tooltipPosition="left"
           (click)="downloadexcel()">
         </button>
       </div>

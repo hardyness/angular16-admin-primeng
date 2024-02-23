@@ -21,11 +21,14 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'NEW KBM',
         items: [
+          { label: 'User/Pengguna', icon: 'pi pi-fw pi-user', routerLink: ['/pengguna'] },
           { label: 'Kantor', icon: 'pi pi-fw pi-building', routerLink: ['/kantor'] },
-          { label: 'Pekerjaan', icon: 'pi pi-fw pi-tablet', routerLink: ['/pekerjaan'] },
-          { label: 'Jaminan', icon: 'pi pi-fw pi-key', routerLink: ['/jaminan'] },
+          { label: 'Pekerjaan', icon: 'pi pi-fw pi-box', routerLink: ['/pekerjaan'] },
+          { label: 'Jaminan', icon: 'pi pi-fw pi-shield', routerLink: ['/jaminan'] },
           { label: 'Golongan', icon: 'pi pi-fw pi-verified', routerLink: ['/golongan'] },
-          { label: 'Struktur', icon: 'pi pi-fw pi-directions', items: [
+          { label: 'Gaji Layout', icon: 'pi pi-fw pi-money-bill', routerLink: ['/gaji-layout'] },
+          { label: 'Header', icon: 'pi pi-fw pi-sun', routerLink: ['/header'] },
+          { label: 'Struktur', icon: 'pi pi-fw pi-sitemap', items: [
             { label: 'Struktur 1',routerLink: ['/struktur1'] },
             { label: 'Struktur 2',routerLink: ['/struktur2'] },
             { label: 'Struktur 3',routerLink: ['/struktur3'] },

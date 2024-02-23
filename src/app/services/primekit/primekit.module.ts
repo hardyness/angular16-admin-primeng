@@ -89,6 +89,7 @@ import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { StyleClassModule } from 'primeng/styleclass';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 @NgModule({
   declarations: [],
@@ -181,7 +182,8 @@ import { StyleClassModule } from 'primeng/styleclass';
     TreeTableModule,
     AnimateModule,
     CardModule,
-    StyleClassModule
+    StyleClassModule,
+    KeyFilterModule
   ],
   exports: [
     AvatarModule,
@@ -272,7 +274,8 @@ import { StyleClassModule } from 'primeng/styleclass';
     TreeTableModule,
     AnimateModule,
     CardModule,
-    StyleClassModule
+    StyleClassModule,
+    KeyFilterModule
   ],
   providers: [MessageService, ConfirmationService]
 })
