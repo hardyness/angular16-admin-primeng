@@ -20,12 +20,15 @@ export class GolonganComponent {
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
-    else {
-      this.popForm = false;
-    }
+
   }
   scrWidth:any;
   @HostListener('window:resize', ['$event'])
@@ -70,6 +73,7 @@ export class GolonganComponent {
   InfiniteData = false;
   scrollTable: any;
   subLayout: any;
+  subHttp: any;
 
   constructor(
     private api: ApiService,
@@ -112,6 +116,9 @@ export class GolonganComponent {
 
   ngOnDestroy() {
     this.subLayout.unsubscribe();
+    if (this.subHttp){
+      this.subHttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -145,7 +152,7 @@ export class GolonganComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'golongan/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'golongan/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -201,7 +208,7 @@ export class GolonganComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'golongan/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'golongan/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -248,7 +255,7 @@ export class GolonganComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'golongan/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'golongan/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -303,7 +310,7 @@ export class GolonganComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'golongan/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'golongan/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -356,7 +363,7 @@ export class GolonganComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'golongan/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'golongan/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -409,7 +416,7 @@ export class GolonganComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'golongan/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'golongan/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

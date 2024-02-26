@@ -32,7 +32,14 @@ export class AppMenuComponent implements OnInit {
             { label: 'Struktur 1',routerLink: ['/struktur1'] },
             { label: 'Struktur 2',routerLink: ['/struktur2'] },
             { label: 'Struktur 3',routerLink: ['/struktur3'] },
-          ]}
+          ]},
+          { label: 'Otomatis', icon: 'pi pi-fw pi-sitemap', items: [
+            { label: 'Pemasukan Teller',routerLink: ['/struktur1'] },
+            { label: 'Pengeluaran Teller',routerLink: ['/struktur2'] },
+            { label: 'Transfer (Kas & Bank)',routerLink: ['/struktur3'] },
+          ]},
+          { label: 'Tipe Pembiayaan', icon: 'pi pi-fw pi-wallet', routerLink: ['/tipe-pembiayaan'] },
+          { label: 'Area', icon: 'pi pi-fw pi-map', routerLink: ['/area'] },
         ]
       },
       // {

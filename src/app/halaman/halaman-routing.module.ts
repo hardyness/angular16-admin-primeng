@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HalamanComponent } from './halaman.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { KategoriProdukComponent } from './kategori-produk/kategori-produk.component';
 import { ProdukComponent } from './produk/produk.component';
-import { KategoriKatalogComponent } from './kategori-katalog/kategori-katalog.component';
 import { KatalogComponent } from './katalog/katalog.component';
 import { TentangKamiComponent } from './tentang-kami/tentang-kami.component';
 import { SeoComponent } from './seo/seo.component';
@@ -17,6 +15,8 @@ import { GolonganComponent } from './golongan/golongan.component';
 import { PenggunaComponent } from './pengguna/pengguna.component';
 import { GajiLayoutComponent } from './gaji-layout/gaji-layout.component';
 import { HeaderComponent } from './header/header.component';
+import { TipepembiayaanComponent } from './tipepembiayaan/tipepembiayaan.component';
+import { AreaComponent } from './area/area.component';
 
 const routes: Routes = [
   // {
@@ -42,14 +42,6 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-  },
-  {
-    path: 'kategori-produk',
-    component: KategoriProdukComponent
-  },
-  {
-    path: 'kategori-katalog',
-    component: KategoriKatalogComponent
   },
   {
     path: 'katalog',
@@ -82,6 +74,14 @@ const routes: Routes = [
   {
     path: 'header',
     component: HeaderComponent,
+  },
+  {
+    path: 'tipe-pembiayaan',
+    component: TipepembiayaanComponent,
+  },
+  {
+    path: 'area',
+    component: AreaComponent,
   },
   {
     path: '',

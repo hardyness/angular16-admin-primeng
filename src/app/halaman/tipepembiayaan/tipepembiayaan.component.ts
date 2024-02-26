@@ -6,26 +6,29 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms"
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { ExcelService } from 'src/app/services/excel.service';
+import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
 const sesilogin = 'masterkbmv4_login';
 
-
 @Component({
-  selector: 'app-kategori-katalog',
-  templateUrl: './kategori-katalog.component.html',
-  styleUrls: ['./kategori-katalog.component.scss']
+  selector: 'app-tipepembiayaan',
+  templateUrl: './tipepembiayaan.component.html',
+  styleUrls: ['./tipepembiayaan.component.scss']
 })
-export class KategoriKatalogComponent {
+export class TipepembiayaanComponent {
   @ViewChild('vsTable') vsTable:Table;
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
-    else {
-      this.popForm = false;
-    }
+
   }
   scrWidth:any;
   @HostListener('window:resize', ['$event'])
@@ -49,18 +52,18 @@ export class KategoriKatalogComponent {
   collectionSize: any;
   pageSize: any;
   totalinput: any = 0;
-  formKategorikatalog: FormGroup;
-  namaKategori: any;
-  idkategori: any;
+  namaTipepembiayaan: any;
+  idtipepembiayaan: any;
 
   //loading
   load: any[] = [];
-  loading: boolean = true;
+  loadingData: boolean = true;
   pageSukses = false;
   pageGagal = false;
   formGagal = false;
   loadingForm = false;
   loadingButton: boolean;
+  loadingHapus: any;
 
   //event
   popForm: boolean = false;
@@ -68,7 +71,17 @@ export class KategoriKatalogComponent {
   unvalid = false;
   InfiniteData = false;
   scrollTable: any;
+  subLayout: any;
+  subHttp: any;
 
+  //form
+  formTipepembiayaan: FormGroup;
+  profit: any;
+  minplafond: any;
+  maxplafond: any;
+  minjangkawaktu: any;
+  maxjangkawaktu: any;
+  persen: any;
 
   constructor(
     private api: ApiService,
@@ -77,15 +90,49 @@ export class KategoriKatalogComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private excel: ExcelService,
+    private layoutservice: LayoutService
   ) {}
 
   async ngOnInit() {
     this.getScreenSize();
-    this.formKategorikatalog = this.fb.group({
-      namaKategori: ['', [Validators.required]],
+    this.formTipepembiayaan = this.fb.group({
+      namaTipepembiayaan: ['', [Validators.required]],
+      profit: ['', [Validators.required]],
+      minplafond: ['', [Validators.required]],
+      maxplafond: ['', [Validators.required]],
+      minjangkawaktu: ['', [Validators.required]],
+      maxjangkawaktu: ['', [Validators.required]],
+      persen: ['', [Validators.required]],
     });
     await this.loadStorage()
-    this.listData();
+    this.subLayout = this.layoutservice.emittersearch$.subscribe(data => {
+      if (data !== ''){
+        this.emitsearch(data)
+      }
+      else {
+        const page_s = localStorage.getItem('search_history')  || '{}';
+        const page_v = JSON.parse(page_s);
+        if (page_s !== '{}'){
+          this.cari = page_v.cari;
+          if (this.cari === undefined){
+            this.cari = '';
+          }
+        }
+        else {
+          this.cari = '';
+        }
+        this.page = 1;
+        this.totalinput = 0;
+        this.listData();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.subLayout.unsubscribe();
+    if (this.subHttp){
+      this.subHttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -96,23 +143,10 @@ export class KategoriKatalogComponent {
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
     this.sesiunik = sesivalue.sesiunik;
-
-    //paging
-    const page_s = localStorage.getItem('pagingKategorikatalog')  || '{}';
-    const page_v = JSON.parse(page_s);
-    if (page_s !== '{}'){
-      this.cari = page_v.cari;
-    };
-    localStorage.removeItem('pagingKategoriproduk');
-    localStorage.removeItem('pagingProduk');
-    localStorage.removeItem('pagingKatalog');
-    localStorage.removeItem('pagingPengunjung');
-    localStorage.removeItem('pagingCustom');
   }
 
   async listData(){
-    this.api.setTitle();
-    this.loading = true;
+    this.loadingData = true;
     return new Promise (resolve => {
       const param = new FormData();
       param.append('halaman', this.page);
@@ -121,17 +155,18 @@ export class KategoriKatalogComponent {
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'kategorikatalog/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'tipepembiayaan/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
         } else if (res.status == 99){
-          this.loading = false;
+          this.api.setTitle();
+          this.loadingData = false;
           this.pageSukses = true;
           this.total = res.total;
           this.totaltampil = res.length
@@ -169,18 +204,18 @@ export class KategoriKatalogComponent {
     })
   }
 
-   async cekTambah(){
+  async cekTambah(){
     this.loadingForm = true;
     return new Promise (() => {
       const cekmenu = new FormData();
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'kategorikatalog/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'tipepembiayaan/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -207,27 +242,27 @@ export class KategoriKatalogComponent {
   async tambah(){
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formKategorikatalog.valid){
+    if(!this.formTipepembiayaan.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaKategori: any = this.formKategorikatalog.value.namaKategori;
-      if (this.api.kataKasar(namaKategori)){
+      var namaTipepembiayaan: any = this.formTipepembiayaan.value.namaTipepembiayaan.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      if (this.api.kataKasar(namaTipepembiayaan)){
         this.loadingButton = false;
         this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
         return false
       }
       return new Promise (resolve => {
         const paramTambah = new FormData();
-        paramTambah.append('kategorikatalog', namaKategori);
+        paramTambah.append('tipepembiayaan', namaTipepembiayaan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
-          'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+          'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'kategorikatalog/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'tipepembiayaan/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -235,13 +270,16 @@ export class KategoriKatalogComponent {
           } else if (res.status == 2){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Coba masukan data lain'});
+          } else if (res.status == 3){
+            this.loadingButton = false;
+            this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Coba masukan data lain'});
           } else if (res.status == 99){
             this.loadingButton = false;
             this.popForm = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data kategori katalog!'});
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data tipepembiayaan!'});
             if (this.total == 0){
               this.cari = '';
-              localStorage.removeItem('pagingKategorikatalog')
+              localStorage.removeItem('paging_tipepembiayaan')
             }
             this.page = 1;
             this.totalinput = 0;
@@ -271,15 +309,15 @@ export class KategoriKatalogComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const dataPerbarui = new FormData();
-      dataPerbarui.append('idkategorikatalog', id);
+      dataPerbarui.append('idtipepembiayaan', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'kategorikatalog/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'tipepembiayaan/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -289,7 +327,8 @@ export class KategoriKatalogComponent {
           this.popForm = false;
         } else if (res.status == 99) {
           this.loadingForm = false;
-          this.namaKategori = res.kategorikatalog;
+          this.namaTipepembiayaan = res.tipepembiayaan;
+          this.minplafond = res.minplafond;
         }
       }, (err) => {
         this.loadingForm = false;
@@ -311,28 +350,28 @@ export class KategoriKatalogComponent {
   async perbarui(){
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formKategorikatalog.valid){
+    if(!this.formTipepembiayaan.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaKategori: any = this.formKategorikatalog.value.namaKategori;
-      if (this.api.kataKasar(namaKategori)){
+      var namaTipepembiayaan: any = this.formTipepembiayaan.value.namaTipepembiayaan.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      if (this.api.kataKasar(namaTipepembiayaan)){
         this.loadingButton = false;
         this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
         return false
       }
       return new Promise (async resolve => {
         const paramPerbarui = new FormData();
-        paramPerbarui.append('idkategorikatalog',  this.idkategori);
-        paramPerbarui.append('kategorikatalog', namaKategori);
+        paramPerbarui.append('idtipepembiayaan',  this.idtipepembiayaan);
+        paramPerbarui.append('tipepembiayaan', namaTipepembiayaan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
-          'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+          'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'kategorikatalog/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'tipepembiayaan/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -343,16 +382,16 @@ export class KategoriKatalogComponent {
             this.popForm = false;
           } else if (res.status == 3){
             this.loadingButton = false;
-            this.messageService.add({severity: 'warn', summary: res.pesan, detail: 'Opps, cobalah ketik nama kategori yang lain'});
+            this.messageService.add({severity: 'warn', summary: res.pesan, detail: 'Opps, cobalah ketik data yang lain'});
           } else if (res.status == 99){
             this.loadingButton = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di kategori katalog!'});
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di tipepembiayaan!'});
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idkategorikatalog === this.idkategori);
+            let index = this.isidata.findIndex(item => item.idtipepembiayaan === this.idtipepembiayaan);
             if (index !== -1) {
-              this.isidata [index].kategorikatalog = namaKategori;
+              this.isidata [index].tipepembiayaan = namaTipepembiayaan;
             }
           }
         }, (err) => {
@@ -374,32 +413,35 @@ export class KategoriKatalogComponent {
   }
 
   async hapusData(id){
+    this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramPerbarui = new FormData();
-      paramPerbarui.append('idkategorikatalog',  id);
+      const paramHapus = new FormData();
+      paramHapus.append('idtipepembiayaan',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramPerbarui, 'kategorikatalog/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'tipepembiayaan/hapus', {headers}).subscribe((res: any) => {
+        this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
         } else if (res.status == 2){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Pastikan data yang ingin anda akses'});
         } else if (res.status == 99){
-          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data di kategori katalog!'});
+          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data di tipepembiayaan!'});
           this.totalinput = 0;
           this.listData();
-          var index = this.isidata.findIndex(item => item.idkategorikatalog === id);
+          var index = this.isidata.findIndex(item => item.idtipepembiayaan === id);
           if (index !== -1){
             this.isidata.splice(index, 1)
           }
         }
       }, (err) => {
+        this.loadingHapus = false;
         if (err.status == 401){
           this.api.error(err);
           setTimeout(() => {
@@ -415,26 +457,28 @@ export class KategoriKatalogComponent {
   }
 
   async konfirmHapus(id, target){
-    this.idkategori = id.idkategorikatalog;
+    this.idtipepembiayaan = id.idtipepembiayaan;
     this.confirmationService.confirm({
       target: target,
-      message: 'yakin ingin menghapus ' + id.kategorikatalog + '?',
+      message: 'yakin ingin menghapus ' + id.tipepembiayaan + '?',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Hapus',
       rejectLabel: 'Batal',
       dismissableMask: true,
-      key: id.idkategorikatalog,
+      key: id.idtipepembiayaan,
+      acceptButtonStyleClass:"p-button-danger",
       accept: () => {
-        this.hapusData(id.idkategorikatalog)
+        this.hapusData(id.idtipepembiayaan)
       },
       reject: () => {
       }
     });
   }
 
+
   //form
   async formKosong(){
-    this.formKategorikatalog.get('namaKategori').reset();
+    this.formTipepembiayaan.get('namaTipepembiayaan').reset();
   }
 
   //event
@@ -466,7 +510,7 @@ export class KategoriKatalogComponent {
       this.tambah()
     } else if (param == 4){
       this.formGagal = false
-      this.dataList(this.idkategori)
+      this.dataList(this.idtipepembiayaan)
     } else if (param == 5){
       this.formGagal = false
       this.perbarui()
@@ -477,46 +521,20 @@ export class KategoriKatalogComponent {
     if (p2 == 1){
       this.cekTambah();
       this.popForm = true;
-      this.namaForm = 'Tambah Kategori Katalog';
+      this.namaForm = 'Tambah Tipe Pembiayaan';
     } else if (p2 == 2){
-      this.dataList(p1.idkategorikatalog)
+      this.dataList(p1.idtipepembiayaan)
       this.popForm = true;
-      this.namaForm = 'Perbarui Data Kategori Katalog';
-      this.idkategori = p1.idkategorikatalog;
+      this.namaForm = 'Perbarui Data Tipe Pembiayaan';
+      this.idtipepembiayaan = p1.idtipepembiayaan;
     }
   }
 
-  gantiPage(e:any){
-    this.page = e.page + 1;
+  async emitsearch(text){
+    this.cari = text;
+    this.page = 1;
+    this.totalinput = 0;
     this.listData();
-  }
-
-  cariData(e){
-    this.cari = e;
-    if (this.cari === '' || undefined){
-      this.cari = '';
-      this.page = 1;
-      this.totalinput = 0;
-      this.listData();
-      var dataPage = {
-        cari: this.cari,
-        scrl: this.scrollTable
-      }
-      localStorage.setItem('pagingKategorikatalog', JSON.stringify(dataPage));
-    }
-  }
-
-  async emitsearch(){
-    if (this.cari !== '' || undefined){
-      this.page = 1;
-      this.totalinput = 0;
-      this.listData();
-    }
-    var dataPage = {
-      cari: this.cari,
-      scrl: this.scrollTable
-    }
-    localStorage.setItem('pagingKategorikatalog', JSON.stringify(dataPage));
   }
 
   onScroll(e){
@@ -528,7 +546,7 @@ export class KategoriKatalogComponent {
   }
 
   async downloadexcel(){
-    var header = ['Id Kategori Katalog', 'Kategori Katalog']
-    this.excel.generateExcel('Data Kategori Katalog', 'Kategori Katalog', header, this.isidata)
+    var header = ['Id tipepembiayaan',  'Tipepembiayaan']
+    this.excel.generateExcel('Data tipepembiayaan', 'tipepembiayaan', header, this.isidata)
   }
 }

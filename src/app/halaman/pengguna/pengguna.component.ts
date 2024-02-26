@@ -1,19 +1,25 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, PrimeNGConfig } from 'primeng/api';
 import { ApiService } from 'src/app/services/api.service';  
 import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { ExcelService } from 'src/app/services/excel.service';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationEnd, NavigationExtras, NavigationStart, Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { Subject, filter, takeUntil } from 'rxjs';
+import { LocaleSettings } from 'primeng/calendar';
+import { TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
+
 const sesilogin = 'masterkbmv4_login';
 
 @Component({
   selector: 'app-pengguna',
   templateUrl: './pengguna.component.html',
-  styleUrls: ['./pengguna.component.scss']
+  styleUrls: ['./pengguna.component.scss'],
+  providers: [DatePipe],
 })
 export class PenggunaComponent {
   @ViewChild('vsTable') vsTable:Table;
@@ -24,11 +30,13 @@ export class PenggunaComponent {
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
-    }
-    else {
-      this.popForm = false;
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
   }
   scrWidth:any;
@@ -76,7 +84,11 @@ export class PenggunaComponent {
   InfiniteData = false;
   InfiniteDataLevel = false;
   scrollTable: any;
+  calendarsetting:LocaleSettings = {
+    firstDayOfWeek: 1,
+  };
   subLayout: any;
+  subHttp: any;
 
   // Level Pengguna
   selectedLevelPengguna: any;
@@ -89,6 +101,7 @@ export class PenggunaComponent {
     { teksLevelAkses: 'Staff', idLevelAkses: 5 },
     { teksLevelAkses: 'Marketing Eksternal', idLevelAkses: 6 },
   ];
+  local: LocaleSettings
 
   constructor(
     private api: ApiService,
@@ -98,10 +111,15 @@ export class PenggunaComponent {
     private confirmationService: ConfirmationService,
     private route: Router,
     private excel: ExcelService,
-    private layoutservice: LayoutService
-  ) {}
+    private layoutservice: LayoutService,
+    public primengConfig: PrimeNGConfig,
+    // public translate: TranslateService,
+    private datePipe: DatePipe,
+  ) {
+  }
 
   async ngOnInit() {
+    
     this.getScreenSize();
     this.formPengguna = this.fb.group({
       namaPengguna: ['', [Validators.required]],
@@ -126,9 +144,9 @@ export class PenggunaComponent {
         setTimeout(() => {
           document.getElementById(page_v.idlogin).scrollIntoView({
             block: "center",
-            inline: "nearest"
+            inline: "nearest",
             });
-        }, 300, localStorage.setItem('pagingPengguna', JSON.stringify({cari: page_v.cari, page: page_v.page})));
+        }, 1100, localStorage.setItem('pagingPengguna', JSON.stringify({cari: page_v.cari, page: page_v.page})));
       }
       else {
         const page_s = localStorage.getItem('search_history')  || '{}';
@@ -148,6 +166,9 @@ export class PenggunaComponent {
 
   ngOnDestroy() {
     this.subLayout.unsubscribe();
+    if (this.subHttp){
+      this.subHttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -158,13 +179,6 @@ export class PenggunaComponent {
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
     this.sesiunik = sesivalue.sesiunik;
-
-    //pagging
-    localStorage.removeItem('pagingKategoriproduk');
-    localStorage.removeItem('pagingProduk');
-    localStorage.removeItem('pagingKatalog');
-    localStorage.removeItem('pagingPengunjung');
-    localStorage.removeItem('pagingCustom');
   }
 
   async listData(){
@@ -181,7 +195,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'pengguna/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'pengguna/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -237,7 +251,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'pengguna/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'pengguna/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -261,6 +275,11 @@ export class PenggunaComponent {
     })
   }
 
+  async test(e){
+    this.datePipe.transform(e, 'yyyy/MM/dd');
+    console.log(this.datePipe.transform(e, 'yyyy/MM/dd'));
+  }
+
   async tambah(){
     this.loadingButton = true;
     this.unvalid = true;
@@ -275,6 +294,7 @@ export class PenggunaComponent {
       var passwordPengguna: any = this.formPengguna.value.passwordPengguna;
       var levelPengguna: any = this.levelPengguna;
       var mulaiPengguna: any = this.formPengguna.value.mulaiPengguna;
+      console.log(mulaiPengguna)
       const parts = mulaiPengguna.split("-");
       mulaiPengguna = parts.join("/");
       if (this.api.kataKasar(namaPengguna)){
@@ -301,7 +321,7 @@ export class PenggunaComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'pengguna/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'pengguna/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -356,7 +376,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'pengguna/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'pengguna/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -424,7 +444,7 @@ export class PenggunaComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'pengguna/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'pengguna/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -481,7 +501,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'pengguna/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'pengguna/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

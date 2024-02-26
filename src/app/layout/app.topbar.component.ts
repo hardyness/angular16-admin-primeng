@@ -53,7 +53,6 @@ export class AppTopBarComponent {
           this.items = this.items_ar;
           setTimeout(() => {
             this.sch = localStorage.getItem('schstatus');
-            console.log(this.sch);
           }, 300);
  
         });

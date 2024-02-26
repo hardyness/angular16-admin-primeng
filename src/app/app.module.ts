@@ -6,6 +6,7 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { LoginModule } from './login/login.module';
 import { PrimekitModule } from './services/primekit/primekit.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -15,10 +16,11 @@ import { PrimekitModule } from './services/primekit/primekit.module';
         AppRoutingModule,
         AppLayoutModule,
         LoginModule,
-        PrimekitModule
+        PrimekitModule,
+        TranslateModule.forRoot()
     ],
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy, useClass: PathLocationStrategy,  },
     ],
     bootstrap: [AppComponent],
 })

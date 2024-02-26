@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -6,25 +6,30 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms"
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { ExcelService } from 'src/app/services/excel.service';
+import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
 const sesilogin = 'masterkbmv4_login';
 
+
 @Component({
-  selector: 'app-kategori-produk',
-  templateUrl: './kategori-produk.component.html',
-  styleUrls: ['./kategori-produk.component.scss'],
+  selector: 'app-area',
+  templateUrl: './area.component.html',
+  styleUrls: ['./area.component.scss']
 })
-export class KategoriProdukComponent {
+export class AreaComponent {
   @ViewChild('vsTable') vsTable:Table;
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
-    else {
-      this.popForm = false;
-    }
+
   }
   scrWidth:any;
   @HostListener('window:resize', ['$event'])
@@ -48,17 +53,19 @@ export class KategoriProdukComponent {
   collectionSize: any;
   pageSize: any;
   totalinput: any = 0;
-  formKategoriproduk: FormGroup;
-  idkategori: any;
+  formArea: FormGroup;
+  namaArea: any;
+  idarea: any;
 
   //loading
   load: any[] = [];
-  loading: boolean = true;
+  loadingData: boolean = true;
   pageSukses = false;
   pageGagal = false;
   formGagal = false;
   loadingForm = false;
   loadingButton: boolean;
+  loadingHapus: any;
 
   //event
   popForm: boolean = false;
@@ -66,9 +73,8 @@ export class KategoriProdukComponent {
   unvalid = false;
   InfiniteData = false;
   scrollTable: any;
-
-  //form
-  namaKategori: any;
+  subLayout: any;
+  subHttp: any;
 
   constructor(
     private api: ApiService,
@@ -77,15 +83,43 @@ export class KategoriProdukComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private excel: ExcelService,
+    private layoutservice: LayoutService
   ) {}
 
-  async ngOnInit(event: KeyboardEvent) {
+  async ngOnInit() {
     this.getScreenSize();
-    this.formKategoriproduk = this.fb.group({
-      namaKategori: ['', [Validators.required]],
+    this.formArea = this.fb.group({
+      namaArea: ['', [Validators.required]],
     });
     await this.loadStorage()
-    this.listData();
+    this.subLayout = this.layoutservice.emittersearch$.subscribe(data => {
+      if (data !== ''){
+        this.emitsearch(data)
+      }
+      else {
+        const page_s = localStorage.getItem('search_history')  || '{}';
+        const page_v = JSON.parse(page_s);
+        if (page_s !== '{}'){
+          this.cari = page_v.cari;
+          if (this.cari === undefined){
+            this.cari = '';
+          }
+        }
+        else {
+          this.cari = '';
+        }
+        this.page = 1;
+        this.totalinput = 0;
+        this.listData();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.subLayout.unsubscribe();
+    if (this.subHttp){
+      this.subHttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -96,21 +130,17 @@ export class KategoriProdukComponent {
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
     this.sesiunik = sesivalue.sesiunik;
-    const page_s = localStorage.getItem('pagingKategoriproduk')  || '{}';
-    const page_v = JSON.parse(page_s);
-    if (page_s !== '{}'){
-      this.cari = page_v.cari;
-    };
+
+    //pagging
+    localStorage.removeItem('pagingKategoriproduk');
     localStorage.removeItem('pagingProduk');
-    localStorage.removeItem('pagingKategorikatalog');
     localStorage.removeItem('pagingKatalog');
     localStorage.removeItem('pagingPengunjung');
     localStorage.removeItem('pagingCustom');
   }
 
   async listData(){
-    this.api.setTitle();
-    this.loading = true;
+    this.loadingData = true;
     return new Promise (resolve => {
       const param = new FormData();
       param.append('halaman', this.page);
@@ -119,20 +149,21 @@ export class KategoriProdukComponent {
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'kategoriproduk/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'area/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
         } else if (res.status == 99){
-          this.loading = false;
+          this.api.setTitle();
+          this.loadingData = false;
           this.pageSukses = true;
           this.total = res.total;
-          this.totaltampil = res.length;
+          this.totaltampil = res.length
           if (this.page == 1){
             this.pageSize = 1;
             this.isidata = res.hasil;
@@ -140,13 +171,13 @@ export class KategoriProdukComponent {
           else {
             if (this.isidata.length < res.total){
               for (let isi of res.hasil){
-                this.isidata.push(isi)
+                this.isidata.push(isi);
               }
             }
           }
           if (this.page == this.collectionSize){
             this.InfiniteData = true;
-          }
+          } 
           else {
             this.InfiniteData = false;
           }
@@ -167,18 +198,18 @@ export class KategoriProdukComponent {
     })
   }
 
-   async cekTambah(){
+  async cekTambah(){
     this.loadingForm = true;
     return new Promise (() => {
       const cekmenu = new FormData();
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'kategoriproduk/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'area/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -205,27 +236,27 @@ export class KategoriProdukComponent {
   async tambah(){
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formKategoriproduk.valid){
+    if(!this.formArea.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaKategori: any = this.formKategoriproduk.value.namaKategori;
-      if (this.api.kataKasar(namaKategori)){
+      var namaArea: any = this.formArea.value.namaArea.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      if (this.api.kataKasar(namaArea)){
         this.loadingButton = false;
-        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Kategori mengandung kata-kata yang dilarang.'});
+        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
         return false
       }
       return new Promise (resolve => {
         const paramTambah = new FormData();
-        paramTambah.append('kategoriproduk', namaKategori);
+        paramTambah.append('area', namaArea);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
-          'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+          'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'kategoriproduk/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'area/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -233,13 +264,16 @@ export class KategoriProdukComponent {
           } else if (res.status == 2){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Coba masukan data lain'});
+          } else if (res.status == 3){
+            this.loadingButton = false;
+            this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Coba masukan data lain'});
           } else if (res.status == 99){
             this.loadingButton = false;
             this.popForm = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data kategori produk!'});
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data area!'});
             if (this.total == 0){
               this.cari = '';
-              localStorage.removeItem('pagingKategoriproduk')
+              localStorage.removeItem('paging_area')
             }
             this.page = 1;
             this.totalinput = 0;
@@ -269,15 +303,15 @@ export class KategoriProdukComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const dataPerbarui = new FormData();
-      dataPerbarui.append('idkategoriproduk', id);
+      dataPerbarui.append('idarea', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'kategoriproduk/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'area/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -287,7 +321,7 @@ export class KategoriProdukComponent {
           this.popForm = false;
         } else if (res.status == 99) {
           this.loadingForm = false;
-          this.namaKategori = res.kategoriproduk;
+          this.namaArea = res.area;
         }
       }, (err) => {
         this.loadingForm = false;
@@ -309,28 +343,28 @@ export class KategoriProdukComponent {
   async perbarui(){
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formKategoriproduk.valid){
+    if(!this.formArea.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaKategori: any = this.formKategoriproduk.value.namaKategori;
-      if (this.api.kataKasar(namaKategori)){
+      var namaArea: any = this.formArea.value.namaArea.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      if (this.api.kataKasar(namaArea)){
         this.loadingButton = false;
-        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Kategori mengandung kata-kata yang dilarang.'});
+        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
         return false
       }
       return new Promise (async resolve => {
         const paramPerbarui = new FormData();
-        paramPerbarui.append('idkategoriproduk',  this.idkategori);
-        paramPerbarui.append('kategoriproduk', namaKategori);
+        paramPerbarui.append('idarea',  this.idarea);
+        paramPerbarui.append('area', namaArea);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
-          'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+          'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'kategoriproduk/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'area/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -341,16 +375,16 @@ export class KategoriProdukComponent {
             this.popForm = false;
           } else if (res.status == 3){
             this.loadingButton = false;
-            this.messageService.add({severity: 'warn', summary: res.pesan, detail: 'Opps, cobalah ketik nama kategori yang lain'});
+            this.messageService.add({severity: 'warn', summary: res.pesan, detail: 'Opps, cobalah ketik data yang lain'});
           } else if (res.status == 99){
             this.loadingButton = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di kategori produk!'});
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di area!'});
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idkategoriproduk === this.idkategori);
-            if (index !== -1){
-              this.isidata[index].kategoriproduk = namaKategori;
+            let index = this.isidata.findIndex(item => item.idarea === this.idarea);
+            if (index !== -1) {
+              this.isidata [index].area = namaArea;
             }
           }
         }, (err) => {
@@ -372,32 +406,35 @@ export class KategoriProdukComponent {
   }
 
   async hapusData(id){
+    this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramPerbarui = new FormData();
-      paramPerbarui.append('idkategoriproduk',  id);
+      const paramHapus = new FormData();
+      paramHapus.append('idarea',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
-        'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramPerbarui, 'kategoriproduk/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'area/hapus', {headers}).subscribe((res: any) => {
+        this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
         } else if (res.status == 2){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Pastikan data yang ingin anda akses'});
         } else if (res.status == 99){
-          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data di kategori produk!'});
+          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data di area!'});
           this.totalinput = 0;
           this.listData();
-          var index = this.isidata.findIndex(item => item.idkategoriproduk === id);
+          var index = this.isidata.findIndex(item => item.idarea === id);
           if (index !== -1){
             this.isidata.splice(index, 1)
           }
         }
       }, (err) => {
+        this.loadingHapus = false;
         if (err.status == 401){
           this.api.error(err);
           setTimeout(() => {
@@ -413,26 +450,28 @@ export class KategoriProdukComponent {
   }
 
   async konfirmHapus(id, target){
-    this.idkategori = id.idkategoriproduk;
+    this.idarea = id.idarea;
     this.confirmationService.confirm({
       target: target,
-      message: 'yakin ingin menghapus ' + id.kategoriproduk + '?',
+      message: 'yakin ingin menghapus ' + id.area + '?',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Hapus',
       rejectLabel: 'Batal',
       dismissableMask: true,
-      key: id.idkategoriproduk,
+      key: id.idarea,
+      acceptButtonStyleClass:"p-button-danger",
       accept: () => {
-        this.hapusData(id.idkategoriproduk)
+        this.hapusData(id.idarea)
       },
       reject: () => {
       }
     });
   }
 
+
   //form
   async formKosong(){
-    this.formKategoriproduk.get('namaKategori').reset();
+    this.formArea.get('namaArea').reset();
   }
 
   //event
@@ -464,7 +503,7 @@ export class KategoriProdukComponent {
       this.tambah()
     } else if (param == 4){
       this.formGagal = false
-      this.dataList(this.idkategori)
+      this.dataList(this.idarea)
     } else if (param == 5){
       this.formGagal = false
       this.perbarui()
@@ -475,41 +514,20 @@ export class KategoriProdukComponent {
     if (p2 == 1){
       this.cekTambah();
       this.popForm = true;
-      this.namaForm = 'Tambah Kategori Produk';
+      this.namaForm = 'Tambah Area';
     } else if (p2 == 2){
-      this.dataList(p1.idkategoriproduk)
+      this.dataList(p1.idarea)
       this.popForm = true;
-      this.namaForm = 'Perbarui Data Kategori Produk';
-      this.idkategori = p1.idkategoriproduk;
+      this.namaForm = 'Perbarui Data Area';
+      this.idarea = p1.idarea;
     }
   }
 
-  cariData(e){
-    this.cari = e;
-    if (this.cari === '' || undefined){
-      this.cari = '';
-      this.page = 1;
-      this.totalinput = 0;
-      this.listData();
-      var dataPage = {
-        cari: this.cari,
-        scrl: this.scrollTable
-      }
-      localStorage.setItem('pagingKategoriproduk', JSON.stringify(dataPage));
-    }
-  }
-
-  async emitsearch(){
-    if (this.cari !== '' || undefined){
-      this.page = 1;
-      this.totalinput = 0;
-      this.listData();
-    }
-    var dataPage = {
-      cari: this.cari,
-      scrl: this.scrollTable
-    }
-    localStorage.setItem('pagingKategoriproduk', JSON.stringify(dataPage));
+  async emitsearch(text){
+    this.cari = text;
+    this.page = 1;
+    this.totalinput = 0;
+    this.listData();
   }
 
   onScroll(e){
@@ -521,7 +539,7 @@ export class KategoriProdukComponent {
   }
 
   async downloadexcel(){
-    var header = ['Id Kategori Produk', 'Kategori Produk']
-    this.excel.generateExcel('Data Kategori Produk', 'Kategori Produk', header, this.isidata)
+    var header = ['Id area',  'Area']
+    this.excel.generateExcel('Data area', 'area', header, this.isidata)
   }
 }

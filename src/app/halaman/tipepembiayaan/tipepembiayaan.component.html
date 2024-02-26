@@ -55,18 +55,42 @@
             class="table-light"
           >
             <tr class="fs-11">
-              <th scope="col">Jaminan</th>
+              <th scope="col">Tipe Pembiayaan</th>
+              <th scope="col">Min Plafond</th>
+              <th scope="col">Max Plafond</th>
+              <th scope="col">Min Jangka Waktu</th>
+              <th scope="col">Max Jangka Waktu</th>
+              <th scope="col">Profit</th>
+              <th scope="col">Persen</th>
               <th scope="col">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of isidata">
-              <td colspan="1" *ngIf="loadingHapus == item.idjaminan">
+              <td colspan="1" *ngIf="loadingHapus == item.idtipepembiayaan">
                 <p-progressBar  mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
-                <b style="color: red;" class="fs-8">Menghapus data {{item.jaminan}}</b>
+                <b style="color: red;" class="fs-8">Menghapus data {{item.tipepembiayaan}}</b>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idjaminan">
-                <p>{{ item.jaminan }}</p>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.tipepembiayaan }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.minplafond | number: '1.0-3'}}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.maxplafond | number: '1.0-3'}}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.minjangkawaktu }} Bulan</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.maxjangkawaktu }} Bulan</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.profit }}</p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+                <p>{{ item.persen }}%</p>
               </td>
               <td style="width: 50px">
                 <div class="btn-group dropstart" #confirmTarget>
@@ -96,7 +120,7 @@
                     </li>
                   </ul>
                 </div>
-                <p-confirmPopup [key]="item.idjaminan"></p-confirmPopup>
+                <p-confirmPopup [key]="item.idtipepembiayaan"></p-confirmPopup>
               </td>
             </tr>
           </tbody>
@@ -197,37 +221,62 @@
   </div>
   <!-- successForm -->
   <form
-    [formGroup]="formJaminan"
+    [formGroup]="formTipepembiayaan"
     class="mt-3"
-    (keyup.enter)="namaForm == 'Tambah Jaminan' ? tambah() : perbarui()"
+    (keyup.enter)="namaForm == 'Tambah Tipe Pembiayaan' ? tambah() : perbarui()"
     *ngIf="!formGagal && !loadingForm"
   >
     <div class="mt-5 flex justify-content-center flex-column">
-      <label htmlFor="jaminan" class="font-semibold text-sm">Nama Jaminan</label>
+      <label htmlFor="tipepembiayaan" class="font-semibold text-sm">Tipe Pembiayaan</label>
       <input
         pInputText
-        id="jaminan"
-        [(ngModel)]="namaJaminan"
-        formControlName="namaJaminan"
+        id="tipepembiayaan"
+        [(ngModel)]="namaTipepembiayaan"
+        formControlName="namaTipepembiayaan"
         class="w-12 border-radius-10"
         appCustomautofocus
       />
     </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label htmlFor="minplafond" class="font-semibold text-sm">Minimal Plafond</label>
+      <p-inputNumber inputId="minplafond" [(ngModel)]="minplafond" formControlName="minplafond" locale="ID" styleClass="w-12" class="w-12" prefix="Rp. " ></p-inputNumber>
+    </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label htmlFor="maxplafond" class="font-semibold text-sm">Maximal Plafond</label>
+      <p-inputNumber inputId="maxplafond" [(ngModel)]="maxplafond" formControlName="maxplafond" locale="ID" styleClass="w-12" class="w-12" prefix="Rp. " ></p-inputNumber>
+    </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label htmlFor="minwaktu" class="font-semibold text-sm">Minimal Jangka Waktu (Bulan)</label>
+      <p-inputNumber inputId="minwaktu" [(ngModel)]="minjangkawaktu" formControlName="minjangkawaktu" locale="ID" styleClass="w-12" class="w-12" maxlength="2" [min]="0" [max]="60"></p-inputNumber>
+    </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label htmlFor="maxwaktu" class="font-semibold text-sm">Maximal Jangka Waktu (Bulan)</label>
+      <p-inputNumber inputId="maxwaktu" [(ngModel)]="maxjangkawaktu" formControlName="maxjangkawaktu" locale="ID" styleClass="w-12" class="w-12" maxlength="2" [min]="minjangkawaktu" [max]="60"></p-inputNumber>
+    </div>
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label htmlFor="profit" class="font-semibold text-sm">Profit</label>
+      <input pInputText maxlength="5" pKeyFilter="num"/>
+    </div>
+    <div class="mt-5 flex justify-content-center flex-column p-input-icon-left">
+      <label htmlFor="persen" class="font-semibold text-sm">Persen</label>
+      <input pInputText maxlength="4" pKeyFilter="num"/>
+      <i class="pi pi-search"></i>
+    </div>
   </form>
   <ng-template pTemplate="footer">
     <p-button
-      *ngIf="namaForm == 'Tambah Jaminan'"
+      *ngIf="namaForm == 'Tambah Tipe Pembiayaan'"
       label="Tambah"
       styleClass="p-button-text"
-      [disabled]="formGagal || formJaminan.invalid || loadingForm"
+      [disabled]="formGagal || formTipepembiayaan.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="tambah()"
     ></p-button>
     <p-button
-      *ngIf="namaForm == 'Perbarui Data Jaminan'"
+      *ngIf="namaForm == 'Perbarui Data Tipe Pembiayaan'"
       label="Perbarui"
       styleClass="p-button-text"
-      [disabled]="formGagal || formJaminan.invalid || loadingForm"
+      [disabled]="formGagal || formTipepembiayaan.invalid || loadingForm"
       [loading]="loadingButton"
       (click)="perbarui()"
     ></p-button>

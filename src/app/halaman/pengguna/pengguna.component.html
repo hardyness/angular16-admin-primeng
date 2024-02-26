@@ -199,7 +199,7 @@
   maximizable="true"
   focusTrap="true"
   [style]="scrWidth > 425 ? {width: '50vw'} : {width: '100%', height: '100%'}"
-  (onHide)="formKosong()"
+  (onHide)="formKosong();"
   #d
 >
   <!-- loading -->
@@ -296,14 +296,15 @@
       </div>
       <div class="mt-5 flex justify-content-center flex-column">
         <label htmlFor="mulaiPengguna" class="font-semibold text-sm">Waktu Mulai Pengguna</label>
-        <input
+        <p-calendar [(ngModel)]="mulaiPengguna" formControlName="mulaiPengguna" [readonlyInput]="true" styleClass="w-12 border-radius-10" appendTo="body" translate (onSelect)="test($event)"></p-calendar>
+        <!-- <input
           pInputText
           id="mulaiPengguna"
           [(ngModel)]="mulaiPengguna"
           formControlName="mulaiPengguna"
           class="w-12 border-radius-10"
           type="date"
-        />
+        /> -->
       </div>
   </form>
   <ng-template pTemplate="footer">

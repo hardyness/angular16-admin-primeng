@@ -20,11 +20,13 @@ export class PekerjaanComponent {
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
-    }
-    else {
-      this.popForm = false;
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
   }
   scrWidth:any;
@@ -70,6 +72,7 @@ export class PekerjaanComponent {
   InfiniteData = false;
   scrollTable: any;
   subLayout: any;
+  subHtttp: any;
 
   constructor(
     private api: ApiService,
@@ -109,6 +112,9 @@ export class PekerjaanComponent {
 
   ngOnDestroy() {
     this.subLayout.unsubscribe();
+    if (this.subHtttp){
+      this.subHtttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -142,7 +148,7 @@ export class PekerjaanComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'pekerjaan/list', {headers}).subscribe((res: any) => {
+      this.subHtttp = this.api.postData(param, 'pekerjaan/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -198,7 +204,7 @@ export class PekerjaanComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'pekerjaan/cek', {headers}).subscribe((res: any) => {
+      this.subHtttp = this.api.postData(cekmenu, 'pekerjaan/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -245,7 +251,7 @@ export class PekerjaanComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'pekerjaan/tambah', {headers}).subscribe((res: any) => {
+        this.subHtttp = this.api.postData(paramTambah, 'pekerjaan/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -300,7 +306,7 @@ export class PekerjaanComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'pekerjaan/data', {headers}).subscribe((res: any) => {
+      this.subHtttp = this.api.postData(dataPerbarui, 'pekerjaan/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -353,7 +359,7 @@ export class PekerjaanComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'pekerjaan/perbarui', {headers}).subscribe((res: any) => {
+        this.subHtttp = this.api.postData(paramPerbarui, 'pekerjaan/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -406,7 +412,7 @@ export class PekerjaanComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'pekerjaan/hapus', {headers}).subscribe((res: any) => {
+      this.subHtttp = this.api.postData(paramHapus, 'pekerjaan/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

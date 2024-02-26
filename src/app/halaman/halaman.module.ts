@@ -5,12 +5,10 @@ import { PrimekitModule } from '../services/primekit/primekit.module';
 import { HalamanRoutingModule } from './halaman-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HalamanComponent } from './halaman.component';
-import { KategoriProdukComponent } from './kategori-produk/kategori-produk.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { NgSelectModule } from '@ng-select/ng-select';
-import { KategoriKatalogComponent } from './kategori-katalog/kategori-katalog.component';
 import { KatalogComponent } from './katalog/katalog.component';
 import { ProdukModule } from './produk/produk.module';
 import { TentangKamiComponent } from './tentang-kami/tentang-kami.component';
@@ -28,11 +26,14 @@ import { StrukturModule } from './struktur/struktur.module';
 import { PenggunaModule } from './pengguna/pengguna.module';
 import { GajiLayoutComponent } from './gaji-layout/gaji-layout.component';
 import { HeaderComponent } from './header/header.component';
+import { TipepembiayaanComponent } from './tipepembiayaan/tipepembiayaan.component';
+import { AreaComponent } from './area/area.component';
+import { CoaComponent } from './coa/coa.component';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent, HalamanComponent, KategoriProdukComponent, KategoriKatalogComponent, KatalogComponent, TentangKamiComponent, SeoComponent, PengunjungComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent,
+    DashboardComponent, HalamanComponent, KatalogComponent, TentangKamiComponent, SeoComponent, PengunjungComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent, TipepembiayaanComponent, AreaComponent, CoaComponent,
   ],
   imports: [
     CommonModule,
