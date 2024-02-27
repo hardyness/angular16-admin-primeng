@@ -5,7 +5,7 @@ import { AksesLevelPenggunaComponent } from './akses-level-pengguna/akses-level-
 
 const routes: Routes = [
   {
-    path: 'pengguna/akses-level-pengguna/:idlogin',
+    path: 'pengguna/akses-level-pengguna/:idpengguna',
     component: AksesLevelPenggunaComponent
   },
 ];

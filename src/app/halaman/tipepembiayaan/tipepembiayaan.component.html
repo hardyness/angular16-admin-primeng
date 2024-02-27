@@ -54,7 +54,7 @@
             style="position: sticky; top: 0; z-index: 99"
             class="table-light"
           >
-            <tr class="fs-11">
+            <tr class="fs-9">
               <th scope="col">Tipe Pembiayaan</th>
               <th scope="col">Min Plafond</th>
               <th scope="col">Max Plafond</th>
@@ -71,25 +71,25 @@
                 <p-progressBar  mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
                 <b style="color: red;" class="fs-8">Menghapus data {{item.tipepembiayaan}}</b>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.tipepembiayaan }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.minplafond | number: '1.0-3'}}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.maxplafond | number: '1.0-3'}}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.minjangkawaktu }} Bulan</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.maxjangkawaktu }} Bulan</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.profit }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idtipepembiayaan">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtipepembiayaan">
                 <p>{{ item.persen }}%</p>
               </td>
               <td style="width: 50px">

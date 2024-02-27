@@ -10,7 +10,6 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
 const sesilogin = 'masterkbmv4_login';
 
-
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
@@ -87,6 +86,7 @@ export class AreaComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Area');
     this.getScreenSize();
     this.formArea = this.fb.group({
       namaArea: ['', [Validators.required]],

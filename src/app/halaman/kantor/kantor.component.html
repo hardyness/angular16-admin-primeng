@@ -54,7 +54,7 @@
             style="position: sticky; top: 0; z-index: 99"
             class="table-light"
           >
-            <tr class="fs-11">
+            <tr class="fs-9">
               <th scope="col">Nama Kantor</th>
               <th scope="col">Kode</th>
               <th scope="col">Lat</th>
@@ -69,19 +69,19 @@
                 <p-progressBar  mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
                 <b style="color: red;" class="fs-8">Menghapus data {{item.kantor}}</b>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idkantor">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idkantor">
                 <p>{{ item.kantor }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idkantor">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idkantor">
                 <p>{{ item.kodekantor }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idkantor">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idkantor">
                 <p>{{ item.lat }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idkantor">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idkantor">
                 <p>{{ item.lng }}</p>
               </td>
-              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-10" *ngIf="loadingHapus !== item.idkantor">
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idkantor">
                 <p>{{ item.radius }}</p>
               </td>
               <td style="width: 50px">

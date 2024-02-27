@@ -47,14 +47,11 @@ export class AppTopBarComponent {
       private confirmationService: ConfirmationService,
     ) {    
         this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val: NavigationEnd) => {
-          this.items_ar = [];
-          this.titlepage = this.getPageTitle(this.router.url);
-          this.items_ar = this.titlepage.split(' - ').map((item, index) => ({ id: index + 1,label: item, styleClass: 'fs-12'}));
-          this.items = this.items_ar;
           setTimeout(() => {
             this.sch = localStorage.getItem('schstatus');
+            var header = localStorage.getItem('headertext');
+            this.titlepage = header;
           }, 300);
- 
         });
      }
 

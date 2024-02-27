@@ -15,7 +15,6 @@ import { TentangKamiComponent } from './tentang-kami/tentang-kami.component';
 import { ApiService } from '../services/api.service';
 import { CustomautofocusModule } from '../services/customautofocus/customautofocus.module';
 import { SeoComponent } from './seo/seo.component';
-import { PengunjungComponent } from './pengunjung/pengunjung.component';
 import { KontakComponent } from './kontak/kontak.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { KantorComponent } from './kantor/kantor.component';
@@ -29,11 +28,13 @@ import { HeaderComponent } from './header/header.component';
 import { TipepembiayaanComponent } from './tipepembiayaan/tipepembiayaan.component';
 import { AreaComponent } from './area/area.component';
 import { CoaComponent } from './coa/coa.component';
+import { SubheaderComponent } from './subheader/subheader.component';
+import { OtomatisModule } from './otomatis/otomatis.module';
 
 
 @NgModule({
   declarations: [
-    DashboardComponent, HalamanComponent, KatalogComponent, TentangKamiComponent, SeoComponent, PengunjungComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent, TipepembiayaanComponent, AreaComponent, CoaComponent,
+    DashboardComponent, HalamanComponent, KatalogComponent, TentangKamiComponent, SeoComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent, TipepembiayaanComponent, AreaComponent, CoaComponent, SubheaderComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +45,7 @@ import { CoaComponent } from './coa/coa.component';
     ProdukModule,
     StrukturModule,
     PenggunaModule,
+    OtomatisModule,
     NgSelectModule,
     CustomautofocusModule,
     GoogleMapsModule

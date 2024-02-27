@@ -119,7 +119,7 @@ export class PenggunaComponent {
   }
 
   async ngOnInit() {
-    
+    this.api.setHeader('Pengguna');
     this.getScreenSize();
     this.formPengguna = this.fb.group({
       namaPengguna: ['', [Validators.required]],
@@ -462,7 +462,7 @@ export class PenggunaComponent {
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idlogin === this.idlogin);
+            let index = this.isidata.findIndex(item => item.idpengguna === this.idlogin);
             if (index !== -1) {
               this.isidata[index].pengguna = namaPengguna;
               this.isidata[index].username = usernamePengguna;
@@ -534,7 +534,7 @@ export class PenggunaComponent {
   }
 
   async konfirmHapus(id, target){
-    this.idlogin = id.idlogin;
+    this.idlogin = id.idpengguna;
     this.confirmationService.confirm({
       target: target,
       message: 'yakin ingin menghapus ' + id.nama + '?',
@@ -542,10 +542,10 @@ export class PenggunaComponent {
       acceptLabel: 'Hapus',
       rejectLabel: 'Batal',
       dismissableMask: true,
-      key: id.idlogin,
+      key: id.idpengguna,
       acceptButtonStyleClass:"p-button-danger",
       accept: () => {
-        this.hapusData(id.idlogin)
+        this.hapusData(id.idpengguna)
       },
       reject: () => {
       }
@@ -603,7 +603,7 @@ export class PenggunaComponent {
       scrl: this.scrollTable,
       isi: this.isidata,
       page: this.page,
-      idlogin: item.idlogin
+      idlogin: item.idpengguna
     }
     localStorage.setItem('pagingPengguna', JSON.stringify(dataPage));
     const navigationExtras: NavigationExtras = {
@@ -611,7 +611,7 @@ export class PenggunaComponent {
       d: item.nama,
       e: item.levelteks
     }};
-    this.route.navigate(['pengguna/akses-level-pengguna/' + item.idlogin], navigationExtras);
+    this.route.navigate(['pengguna/akses-level-pengguna/' + item.idpengguna], navigationExtras);
   }
 
   async openPop(p1, p2){
@@ -620,12 +620,12 @@ export class PenggunaComponent {
       this.popForm = true;
       this.namaForm = 'Tambah Pengguna';
     } else if (p2 == 2){
-      this.dataList(p1.idlogin)
+      this.dataList(p1.idpengguna)
       this.popForm = true;
       this.dataLevelPengguna;
       console.log(this.dataLevelPengguna)
       this.namaForm = 'Perbarui Data Pengguna';
-      this.idlogin = p1.idlogin;
+      this.idlogin = p1.idpengguna;
     }
   }
 

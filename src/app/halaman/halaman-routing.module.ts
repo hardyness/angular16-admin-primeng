@@ -6,7 +6,6 @@ import { ProdukComponent } from './produk/produk.component';
 import { KatalogComponent } from './katalog/katalog.component';
 import { TentangKamiComponent } from './tentang-kami/tentang-kami.component';
 import { SeoComponent } from './seo/seo.component';
-import { PengunjungComponent } from './pengunjung/pengunjung.component';
 import { KontakComponent } from './kontak/kontak.component';
 import { KantorComponent } from './kantor/kantor.component';
 import { PekerjaanComponent } from './pekerjaan/pekerjaan.component';
@@ -17,6 +16,8 @@ import { GajiLayoutComponent } from './gaji-layout/gaji-layout.component';
 import { HeaderComponent } from './header/header.component';
 import { TipepembiayaanComponent } from './tipepembiayaan/tipepembiayaan.component';
 import { AreaComponent } from './area/area.component';
+import { SubheaderComponent } from './subheader/subheader.component';
+import { CoaComponent } from './coa/coa.component';
 
 const routes: Routes = [
   // {
@@ -56,10 +57,6 @@ const routes: Routes = [
     component: SeoComponent 
   },
   {
-    path: 'pengunjung',
-    component: PengunjungComponent 
-  },
-  {
     path: 'kontak',
     component: KontakComponent 
   },
@@ -74,6 +71,14 @@ const routes: Routes = [
   {
     path: 'header',
     component: HeaderComponent,
+  },
+  {
+    path: 'subheader',
+    component: SubheaderComponent,
+  },
+  {
+    path: 'coa',
+    component: CoaComponent,
   },
   {
     path: 'tipe-pembiayaan',

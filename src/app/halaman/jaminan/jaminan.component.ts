@@ -85,6 +85,7 @@ export class JaminanComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Jaminan');
     this.getScreenSize();
     this.formJaminan = this.fb.group({
       namaJaminan: ['', [Validators.required]],

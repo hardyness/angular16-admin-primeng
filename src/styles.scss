@@ -52,6 +52,10 @@ $gutter: 1rem; //for primeflex grid system
 //   background-color: white;
 // }
 
+.bg-primary-thin {
+  background-color: #ddeffd !important;
+}
+
 
 @for $i from 1 through 40 {
   .border-radius-#{$i} {

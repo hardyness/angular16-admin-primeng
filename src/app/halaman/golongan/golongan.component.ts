@@ -86,6 +86,7 @@ export class GolonganComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Golongan');
     this.getScreenSize();
     this.formGolongan = this.fb.group({
       namaGolongan: ['', [Validators.required]],

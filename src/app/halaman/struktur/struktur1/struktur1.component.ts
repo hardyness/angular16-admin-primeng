@@ -20,11 +20,13 @@ export class Struktur1Component {
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
     event.preventDefault();
-    if (!this.popForm){
-      this.openPop('', 1);
-    }
-    else {
-      this.popForm = false;
+    if (this.pageSukses){
+      if (!this.popForm){
+        this.openPop('', 1);
+      }
+      else {
+        this.popForm = false;
+      }
     }
   }
   scrWidth:any;
@@ -116,6 +118,7 @@ export class Struktur1Component {
   InfiniteDataselectstruktur3 = false;
   scrollTable: any;
   subLayout: any;
+  subHttp: any;
 
   constructor(
     private api: ApiService,
@@ -128,6 +131,7 @@ export class Struktur1Component {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Struktur 1');
     this.getScreenSize();
     this.formStruktur1 = this.fb.group({
       struktur1: ['', [Validators.required]],
@@ -160,6 +164,9 @@ export class Struktur1Component {
 
   ngOnDestroy() {
     this.subLayout.unsubscribe();
+    if (this.subHttp){
+      this.subHttp.unsubscribe();
+    }
   }
 
   async loadStorage(){
@@ -193,7 +200,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'struktur1/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'struktur1/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -249,7 +256,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(cekmenu, 'struktur1/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'struktur1/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -287,7 +294,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'struktur1/selectstruktur3', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'struktur1/selectstruktur3', {headers}).subscribe((res: any) => {
         this.loadingSelect3 = false;
         this.collectionselectstruktur3 = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
@@ -354,7 +361,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'struktur1/selectstruktur2', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'struktur1/selectstruktur2', {headers}).subscribe((res: any) => {
         this.loadingSelect2 = false;
         this.collectionselectstruktur2 = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
@@ -419,7 +426,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(param, 'struktur1/selectstruktur1', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'struktur1/selectstruktur1', {headers}).subscribe((res: any) => {
         this.loadingSelect3 = false;
         this.collectionselectstruktur1 = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
@@ -489,7 +496,7 @@ export class Struktur1Component {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'struktur1/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'struktur1/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -544,7 +551,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(dataPerbarui, 'struktur1/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'struktur1/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -599,7 +606,7 @@ export class Struktur1Component {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'struktur1/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'struktur1/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -654,7 +661,7 @@ export class Struktur1Component {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'struktur1/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'struktur1/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -711,9 +718,9 @@ export class Struktur1Component {
     this.formStruktur1.get('struktur1').reset();
     this.formStruktur1.get('struktur2').reset();
     this.formStruktur1.get('struktur3').reset();
-    this.idselectstruktur2 = '';
-    this.idselectstruktur3 = '';
-    this.idselectstruktur1 = '';
+    this.idselectstruktur2 = undefined;
+    this.idselectstruktur3 = undefined;
+    this.idselectstruktur1 = undefined;
   }
 
   //event
@@ -873,15 +880,15 @@ export class Struktur1Component {
 
   async clearselect(tipe){
     if (tipe == 1){
-      this.idselectstruktur3 = '';
+      this.idselectstruktur3 = undefined;
       this.formStruktur1.get('struktur2').reset();
-      this.idselectstruktur2 = '';
+      this.idselectstruktur2 = undefined;
     }
     else if (tipe == 2){
-      this.idselectstruktur2 = '';
+      this.idselectstruktur2 = undefined;
     }
     else if (tipe == 3){
-      this.idselectstruktur1 = '';
+      this.idselectstruktur1 = undefined;
     }
   }
 }

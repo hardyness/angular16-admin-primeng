@@ -94,6 +94,7 @@ export class TipepembiayaanComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Tipe Pembiayaan');
     this.getScreenSize();
     this.formTipepembiayaan = this.fb.group({
       namaTipepembiayaan: ['', [Validators.required]],

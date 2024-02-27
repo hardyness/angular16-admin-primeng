@@ -1,0 +1,121 @@
+<p-toast position="top-center"></p-toast>
+<p-confirmDialog [rejectVisible]="false" [closable]="false" [style]="scrWidth >= 425 ? {width: '50vw'} : {width: '80vw'}"></p-confirmDialog>
+<!-- loading -->
+<div
+  *ngIf="pageSukses == false && pageGagal == false"
+  class="flex align-items-start w-full h-screen flex-column"
+>
+  <p-skeleton class="w-12 mb-4" height="30px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="75px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="150px"></p-skeleton>
+  <p-skeleton class="w-12" height="150px"></p-skeleton>
+</div>
+
+<!-- errorPage -->
+<div
+  class="grid flex flex-column justify-content-center align-items-center w-full h-screen"
+  *ngIf="pageGagal"
+>
+  <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+  <b>Opps, terjadi kesalahan!</b>
+  <p class="fs-10" style="text-align: center;">Coba periksa konksi internet anda lalu ulangi kembali</p>
+  <button
+    type="button"
+    label="Ulangi"
+    pButton
+    pRipple
+    class="p-button-text p-button-rounded"
+    icon="pi pi-refresh"
+    style="color: rgb(34, 155, 7)"
+    *ngFor="let error of load"
+    (click)="reload(error.tipe, '')"
+  ></button>
+</div>
+
+<!-- successPage -->
+<div class="grid" *ngIf="pageSukses">
+  <div class="col-12">
+    <div class="card">
+        <div class="row">
+            <div class="col-6">
+                <div
+                    class="card-header align-items-center justify-content-between flex"
+                >
+                    <h5 class="m-0 inline fs-12">Debit</h5>
+                </div>
+                <div style="overflow-x: auto; height: 400px">
+                    <form
+                    [formGroup]="formTambahDebit"
+                    class="mt-3"
+                    *ngIf="!formGagal && !loadingForm"
+                  >
+                
+                    <div class="mb-3 flex flex-column justify-content-center">
+                      <ng-select
+                        [(ngModel)]="idselectdebit"
+                        formControlName="dataTambahDebit"
+                        [items]="isidataselectdebit"
+                        bindValue="iddebit"
+                        bindLabel="debit"
+                        (open)="openDebit($event)"
+                        [virtualScroll]="true"
+                        (scrollToEnd)="onScrollingDebit()"
+                        [searchable]="true"
+                        (search)="cariDataDebit($event)"
+                        [loading]="loadingDebit"
+                        [infiniteScrollDisabled]="InfiniteDataselectdebit"
+                        notFoundText="data tidak ditemukan"
+                        [placeholder]="'Pilih Debit'"
+                        class="custom-select"
+                        (change)="tambahDebit()"
+                        [clearable]="false"
+                        required
+                      >
+                      </ng-select>
+                    </div>
+                  </form>   
+                </div>
+            </div>
+            <div class="col-6">
+                <div
+                    class="card-header align-items-center justify-content-between flex"
+                >
+                    <h5 class="m-0 inline fs-12">Kredit</h5>
+                </div>
+                <div style="overflow-x: auto; height: 400px">
+                    <form
+                    [formGroup]="formTambahKredit"
+                    class="mt-3"
+                    *ngIf="!formGagal && !loadingForm"
+                  >
+                
+                    <div class="mb-3 flex flex-column justify-content-center">
+                      <ng-select
+                        [(ngModel)]="idselectkredit"
+                        formControlName="dataTambahKredit"
+                        [items]="isidataselectkredit"
+                        bindValue="idkredit"
+                        bindLabel="kredit"
+                        (open)="openKredit($event)"
+                        [virtualScroll]="true"
+                        (scrollToEnd)="onScrollingKredit()"
+                        [searchable]="true"
+                        (search)="cariDataKredit($event)"
+                        [loading]="loadingKredit"
+                        [infiniteScrollDisabled]="InfiniteDataselectkredit"
+                        notFoundText="data tidak ditemukan"
+                        [placeholder]="'Pilih Kredit'"
+                        class="custom-select"
+                        (change)="tambahKredit()"
+                        required
+                        [clearable]="false"
+                      >
+                      </ng-select>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>  

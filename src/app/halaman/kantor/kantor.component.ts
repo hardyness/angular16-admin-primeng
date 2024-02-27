@@ -98,6 +98,7 @@ export class KantorComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Daftar Kantor');
     this.getScreenSize();
     this.formKantor = this.fb.group({
       namaKantor: ['', [Validators.required]],

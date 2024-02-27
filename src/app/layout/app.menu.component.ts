@@ -22,24 +22,40 @@ export class AppMenuComponent implements OnInit {
         label: 'NEW KBM',
         items: [
           { label: 'User/Pengguna', icon: 'pi pi-fw pi-user', routerLink: ['/pengguna'] },
-          { label: 'Kantor', icon: 'pi pi-fw pi-building', routerLink: ['/kantor'] },
-          { label: 'Pekerjaan', icon: 'pi pi-fw pi-box', routerLink: ['/pekerjaan'] },
-          { label: 'Jaminan', icon: 'pi pi-fw pi-shield', routerLink: ['/jaminan'] },
-          { label: 'Golongan', icon: 'pi pi-fw pi-verified', routerLink: ['/golongan'] },
           { label: 'Gaji Layout', icon: 'pi pi-fw pi-money-bill', routerLink: ['/gaji-layout'] },
-          { label: 'Header', icon: 'pi pi-fw pi-sun', routerLink: ['/header'] },
+          { label: 'Office', icon: 'pi pi-fw pi-building', items: [
+            { label: 'Daftar Kantor', routerLink: ['/kantor'] },
+            { label: 'Area', routerLink: ['/area'] },
+          ]},
+          { label: 'Referensi', icon: 'pi pi-fw pi-book', items: [
+            { label: 'Tipe Pembiayaan', routerLink: ['/tipe-pembiayaan'] },
+            { label: 'Jaminan', routerLink: ['/jaminan'] },
+            { label: 'Golongan', routerLink: ['/golongan'] },
+            { label: 'Pekerjaan', routerLink: ['/pekerjaan'] },
+          ]},
           { label: 'Struktur', icon: 'pi pi-fw pi-sitemap', items: [
             { label: 'Struktur 1',routerLink: ['/struktur1'] },
             { label: 'Struktur 2',routerLink: ['/struktur2'] },
             { label: 'Struktur 3',routerLink: ['/struktur3'] },
           ]},
-          { label: 'Otomatis', icon: 'pi pi-fw pi-sitemap', items: [
-            { label: 'Pemasukan Teller',routerLink: ['/struktur1'] },
-            { label: 'Pengeluaran Teller',routerLink: ['/struktur2'] },
-            { label: 'Transfer (Kas & Bank)',routerLink: ['/struktur3'] },
+          { label: 'Finance', icon: 'pi pi-fw pi-credit-card', items: [
+            { label: 'Header', routerLink: ['/header'] },
+            { label: 'Subheader', routerLink: ['/subheader'] },
+            { label: 'Coa', routerLink: ['/coa'] },
           ]},
-          { label: 'Tipe Pembiayaan', icon: 'pi pi-fw pi-wallet', routerLink: ['/tipe-pembiayaan'] },
-          { label: 'Area', icon: 'pi pi-fw pi-map', routerLink: ['/area'] },
+          { label: 'Otomatis', icon: 'pi pi-fw pi-play', items: [
+            { label: 'Pemasukan',routerLink: ['/otomatispemasukan'] },
+            { label: 'Pengeluaran',routerLink: ['/otomatispengeluaran'] },
+            { label: 'Bunga Tabungan',routerLink: ['/otomatisbungatabungan'] },
+            { label: 'Pajak Bunga Tabungan',routerLink: ['/otomatispajakbungatabungan'] },
+            { label: 'Biaya Admin Tabungan',routerLink: ['/otomatisbiayaadmintabungan'] },
+            { label: 'Bunga Simpanan Pokok',routerLink: ['/otomatisbungasimpananpokok'] },
+            { label: 'Pajak Bunga Simpanan Pokok',routerLink: ['/otomatispajakbungasimpananpokok'] },
+            { label: 'Bunga Simpanan Wajib',routerLink: ['/otomatisbungasimpananwajib'] },
+            { label: 'Pajak Bunga Simpanan Wajib',routerLink: ['/otomatispajakbungasimpananwajib'] },
+            { label: 'Setoran Pelunasan Dipercepat',routerLink: ['/otomatissetoranpelunasandipercepat'] },
+          ]},
+          // { label: 'Tipe Pembiayaan', icon: 'pi pi-fw pi-wallet', routerLink: ['/tipe-pembiayaan'] },
         ]
       },
       // {

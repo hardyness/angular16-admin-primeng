@@ -14,7 +14,11 @@
       <i [class]="showfullSearch ? 'pi pi-times' : 'pi pi-search'"></i>
     </button>
 
-    <p-breadcrumb [ngClass]="scrWidth >= 768 ? 'ml-auto' : 'm-l-16 '" class="fs-14 font-bold" [model]="items" *ngIf="!showfullSearch"></p-breadcrumb>
+    <!-- <p-breadcrumb [ngClass]="scrWidth >= 768 ? 'ml-auto' : 'm-l-16 '" class="fs-14 font-bold" [model]="items" *ngIf="!showfullSearch"></p-breadcrumb> -->
+
+    <label [ngClass]="scrWidth >= 768? 'ml-auto' : 'm-l-16 '" class="fs-11 font-bold">{{titlepage}}</label>
+
+    <span *ngIf="sch !== null" class="ml-auto"></span>
 
     <span class="p-input-icon-left ml-auto float-end" *ngIf="scrWidth >= 768 && sch == null">
       <i class="pi pi-search" ></i>

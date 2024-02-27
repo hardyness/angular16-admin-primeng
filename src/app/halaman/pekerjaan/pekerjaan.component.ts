@@ -85,6 +85,7 @@ export class PekerjaanComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Pekerjaan');
     this.getScreenSize();
     this.formPekerjaan = this.fb.group({
       namaPekerjaan: ['', [Validators.required]],

@@ -54,7 +54,7 @@ export class AksesLevelPenggunaComponent {
   totalinput: any = 0;
   formPenggunakses: FormGroup;
   namaPengguna: any;
-  idlogin: any;
+  idpengguna: any;
   idakses: any;
   namalogin: any;
   level: any;
@@ -107,12 +107,13 @@ export class AksesLevelPenggunaComponent {
   ) {}
 
   async ngOnInit() {
+    this.api.setHeader('Pengguna > Akses Pengguna');
     this.getScreenSize();
     this.formPenggunakses = this.fb.group({
       akses: ['', [Validators.required]],
     });
     await this.loadStorage();
-    this.idlogin = this.actRoute.snapshot.paramMap.get('idlogin');
+    this.idpengguna = this.actRoute.snapshot.paramMap.get('idpengguna');
     this.namalogin = this.actRoute.snapshot.queryParamMap.get('d');
     this.level = this.actRoute.snapshot.queryParamMap.get('e');
     const page_s = localStorage.getItem('pagingPengguna')  || '{}';
@@ -160,7 +161,7 @@ export class AksesLevelPenggunaComponent {
       param.append('halaman', this.page);
       param.append('cari', this.cari);
       param.append('totalinput', this.totalinput);
-      param.append('idlogin', this.idlogin);
+      param.append('idpengguna', this.idpengguna);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -221,7 +222,7 @@ export class AksesLevelPenggunaComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const cekmenu = new FormData();
-      cekmenu.append('idlogin', this.idlogin);
+      cekmenu.append('idpengguna', this.idpengguna);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -263,7 +264,7 @@ export class AksesLevelPenggunaComponent {
       var akses: any = this.formPenggunakses.value.akses; 
       return new Promise (resolve => {
         const paramTambah = new FormData();
-        paramTambah.append('idlogin', this.idlogin);
+        paramTambah.append('idpengguna', this.idpengguna);
         paramTambah.append('akses', akses);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
@@ -314,7 +315,7 @@ export class AksesLevelPenggunaComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const dataPerbarui = new FormData();
-      dataPerbarui.append('idlogin', this.idlogin);
+      dataPerbarui.append('idpengguna', this.idpengguna);
       dataPerbarui.append('idakses', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
@@ -369,7 +370,7 @@ export class AksesLevelPenggunaComponent {
       var akses: any = this.formPenggunakses.value.akses;
       return new Promise (async resolve => {
         const paramPerbarui = new FormData();
-        paramPerbarui.append('idlogin', this.idlogin);
+        paramPerbarui.append('idpengguna', this.idpengguna);
         paramPerbarui.append('idakses', this.idakses);
         paramPerbarui.append('akses', akses);
         var headers = new HttpHeaders({
@@ -397,7 +398,7 @@ export class AksesLevelPenggunaComponent {
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idlogin === this.idlogin);
+            let index = this.isidata.findIndex(item => item.idpengguna === this.idpengguna);
             if (index !== -1) {
               this.isidata [index].penggunaakses = akses;
             }
@@ -424,7 +425,7 @@ export class AksesLevelPenggunaComponent {
     this.loadingHapus = id;
     return new Promise (async resolve => {
       const paramHapus = new FormData();
-      paramHapus.append('idlogin', this.idlogin);
+      paramHapus.append('idpengguna', this.idpengguna);
       paramHapus.append('idakses', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
@@ -444,7 +445,7 @@ export class AksesLevelPenggunaComponent {
           this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data Akses Pengguna!'});
           this.totalinput = 0;
           this.listData();
-          var index = this.isidata.findIndex(item => item.idlogin === id);
+          var index = this.isidata.findIndex(item => item.idpengguna === id);
           if (index !== -1){
             this.isidata.splice(index, 1)
           }
