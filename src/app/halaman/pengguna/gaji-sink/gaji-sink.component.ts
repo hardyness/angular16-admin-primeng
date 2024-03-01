@@ -1,31 +1,23 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { MessageService, ConfirmationService, PrimeNGConfig } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/services/api.service';  
 import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { ExcelService } from 'src/app/services/excel.service';
-import { NavigationEnd, NavigationExtras, NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
-import { Subject, filter, takeUntil } from 'rxjs';
-import { LocaleSettings } from 'primeng/calendar';
-import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
 
 const sesilogin = 'masterkbmv4_login';
 
 @Component({
-  selector: 'app-pengguna',
-  templateUrl: './pengguna.component.html',
-  styleUrls: ['./pengguna.component.scss'],
-  providers: [DatePipe],
+  selector: 'app-gaji-sink',
+  templateUrl: './gaji-sink.component.html',
+  styleUrls: ['./gaji-sink.component.scss']
 })
-export class PenggunaComponent {
+export class GajiSinkComponent {
   @ViewChild('vsTable') vsTable:Table;
-  usernamePengguna: any;
-  mulaiPengguna: any;
-  passwordPengguna: any;
   teksLevelAkses: any;
   @HostListener('window:keydown.control.q', ['$event'])
   bukaDialog(event: KeyboardEvent) {
@@ -62,10 +54,27 @@ export class PenggunaComponent {
   collectionSize: any;
   pageSize: any;
   totalinput: any = 0;
-  formPengguna: FormGroup;
+  formGajiLayout: FormGroup;
   namaPengguna: any;
-  idlogin: any;
+  idpengguna: any;
+  idgajisink: any;
+  namalogin: any;
+  level: any;
+  idgajilayout: any;
 
+  // data select gajilayout
+  isidataselectgajilayout: any[] = [];
+  totalselectgajilayout: any;
+  totaltampilselectgajilayout: any;
+  pageselectgajilayout: any;
+  cariselectgajilayout: any;
+  collectionselectgajilayout: any;
+  pagesizeselectgajilayout: any;
+  totalinputselectgajilayout: any = 0;
+  idselectgajilayout: any;
+  selectgajilayout: any;
+  selectgajilayouttext: any;
+  
   //loading
   load: any[] = [];
   loadingData: boolean = true;
@@ -84,24 +93,14 @@ export class PenggunaComponent {
   InfiniteData = false;
   InfiniteDataLevel = false;
   scrollTable: any;
-  calendarsetting:LocaleSettings = {
-    firstDayOfWeek: 1,
-  };
   subLayout: any;
   subHttp: any;
+  InfiniteDataselectgajilayout = false;
 
-  // Level Pengguna
-  selectedLevelPengguna: any;
-  levelPengguna: any;
-  dataLevelPengguna = [
-    { teksLevelAkses: 'Master', idLevelAkses: 1 },
-    { teksLevelAkses: 'Pengurus Dan Pengawas', idLevelAkses: 2 },
-    { teksLevelAkses: 'Manajer', idLevelAkses: 3 },
-    { teksLevelAkses: 'Kabid', idLevelAkses: 4 },
-    { teksLevelAkses: 'Staff', idLevelAkses: 5 },
-    { teksLevelAkses: 'Marketing Eksternal', idLevelAkses: 6 },
-  ];
-  local: LocaleSettings
+  gajisink: any;
+
+  // List Data Gaji Sink
+  nominal: any;
 
   constructor(
     private api: ApiService,
@@ -112,41 +111,25 @@ export class PenggunaComponent {
     private route: Router,
     private excel: ExcelService,
     private layoutservice: LayoutService,
-    public primengConfig: PrimeNGConfig,
-    // public translate: TranslateService,
-    private datePipe: DatePipe,
-  ) {
-  }
+    public actRoute: ActivatedRoute,
+  ) {}
 
   async ngOnInit() {
-    this.api.setHeader('Pengguna');
+    this.api.setHeader('Pengguna > Gaji Sink');
     this.getScreenSize();
-    this.formPengguna = this.fb.group({
-      namaPengguna: ['', [Validators.required]],
-      usernamePengguna: ['', [Validators.required, this.noSpaceValidator]],
-      passwordPengguna: ['', [Validators.required]],
-      levelPengguna: ['', [Validators.required]],
-      mulaiPengguna: ['', [Validators.required]],
+    this.formGajiLayout = this.fb.group({
+      dataidgajilayout: ['', [Validators.required]],
+      nominal: ['', [Validators.required]],
     });
     await this.loadStorage();
+    this.idpengguna = this.actRoute.snapshot.paramMap.get('idpengguna');
+    this.namalogin = this.actRoute.snapshot.queryParamMap.get('d');
+    this.level = this.actRoute.snapshot.queryParamMap.get('e');
     const page_s = localStorage.getItem('pagingPengguna')  || '{}';
     const page_v = JSON.parse(page_s);
     this.subLayout = this.layoutservice.emittersearch$.subscribe(data => {
       if (data !== ''){
         this.emitsearch(data)
-      }
-      else if (page_v.isi !== undefined){
-        this.page = page_v.page;
-        this.totalinput = 0;
-        this.isidata = page_v.isi;
-        this.cari = page_v.cari;
-        this.listData();
-        setTimeout(() => {
-          document.getElementById(page_v.idlogin).scrollIntoView({
-            block: "center",
-            inline: "nearest",
-            });
-        }, 1100, localStorage.setItem('pagingPengguna', JSON.stringify({cari: page_v.cari, page: page_v.page})));
       }
       else {
         const page_s = localStorage.getItem('search_history')  || '{}';
@@ -169,6 +152,7 @@ export class PenggunaComponent {
     if (this.subHttp){
       this.subHttp.unsubscribe();
     }
+    localStorage.removeItem('schstatus');
   }
 
   async loadStorage(){
@@ -179,6 +163,7 @@ export class PenggunaComponent {
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
     this.sesiunik = sesivalue.sesiunik;
+    localStorage.setItem('schstatus', '2');
   }
 
   async listData(){
@@ -188,6 +173,7 @@ export class PenggunaComponent {
       param.append('halaman', this.page);
       param.append('cari', this.cari);
       param.append('totalinput', this.totalinput);
+      param.append('idpengguna', this.idpengguna);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -195,13 +181,17 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(param, 'pengguna/list', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'gajisink/list', {headers}).subscribe((res: any) => {
         this.collectionSize = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
-        } else if (res.status == 99){
-          this.api.setTitle();
+        }
+        else if (res.status == 2){
+          this.kembali()
+        }
+        else if (res.status == 99){
+          this.api.setCustomtitle('Akses Akses Pengguna - ' + this.namalogin + ' | KBM Master');
           this.loadingData = false;
           this.pageSukses = true;
           this.total = res.total;
@@ -244,6 +234,7 @@ export class PenggunaComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const cekmenu = new FormData();
+      cekmenu.append('idpengguna', this.idpengguna);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -251,7 +242,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(cekmenu, 'pengguna/cek', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(cekmenu, 'gajisink/cek', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -275,45 +266,83 @@ export class PenggunaComponent {
     })
   }
 
-  async test(e){
-    this.datePipe.transform(e, 'yyyy/MM/dd');
-    console.log(this.datePipe.transform(e, 'yyyy/MM/dd'));
+  async selectGajiLayout(){
+    this.loadingSelect = true;
+    return new Promise (resolve => {
+      const param = new FormData();
+      param.append('halaman', this.pageselectgajilayout);
+      param.append('cari', this.cariselectgajilayout);
+      param.append('totalinput', this.totalinputselectgajilayout);
+      param.append('idpengguna', this.idpengguna);
+
+      var headers = new HttpHeaders({
+        'x-access-token': this.sesitoken,
+        'x-access-unik': this.sesiunik,
+        'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
+        'sesiidlogin': this.sesiidlogin,
+        'sesiusername': this.sesiusername,
+      });
+      this.subHttp = this.api.postData(param, 'gajisink/selectgajilayout', {headers}).subscribe((res: any) => {
+        this.loadingSelect = false;
+        this.collectionselectgajilayout = Math.ceil(parseInt(res.total) / parseInt(res.length));
+        if (res.status == 1){
+          this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
+          this.auth.logout();
+        } 
+        else if (res.status == 2){
+          this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Periksa kembali data yang ingin Anda akses!'});
+        }
+        else if (res.status == 99){
+          this.totalselectgajilayout = res.total;
+          this.pagesizeselectgajilayout = res.totaldata;
+          if (this.pageselectgajilayout == 1){
+            this.pageselectgajilayout = 1;
+            this.isidataselectgajilayout = res.hasil;
+          }
+          else {
+            if (this.isidataselectgajilayout.length < res.total){
+              for (let isi of res.hasil){
+                this.isidataselectgajilayout = [...this.isidataselectgajilayout, {idgajilayout: isi.idgajilayout, kredit: isi.kredit}];
+              }
+            }
+          }
+          if (this.pageselectgajilayout == this.collectionselectgajilayout){
+            this.InfiniteDataselectgajilayout = true;
+          } else {
+            this.InfiniteDataselectgajilayout = false;
+          }
+        }
+      }, ((err) => {
+        this.loadingSelect = false;
+        if (err.status == 401){
+          this.api.error(err);
+          setTimeout(() => {
+            this.loadStorage();
+            this.selectGajiLayout();
+          }, 300)
+        }
+        else {
+          this.api.error(err);
+          this.gagalPost(3, '');
+        }
+      }))
+    })
   }
 
   async tambah(){
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formPengguna.valid){
+    if(!this.formGajiLayout.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaPengguna: any = this.formPengguna.value.namaPengguna.split(' ')
-      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-      var usernamePengguna: any = this.formPengguna.value.usernamePengguna;
-      var passwordPengguna: any = this.formPengguna.value.passwordPengguna;
-      var levelPengguna: any = this.levelPengguna;
-      var mulaiPengguna: any = this.formPengguna.value.mulaiPengguna;
-      console.log(mulaiPengguna)
-      const parts = mulaiPengguna.split("-");
-      mulaiPengguna = parts.join("/");
-      if (this.api.kataKasar(namaPengguna)){
-        this.loadingButton = false;
-        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
-        return false
-      }
-      if (this.api.kataKasar(usernamePengguna)){
-        this.loadingButton = false;
-        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
-        return false
-      }
+      var idgajilayout: any = this.formGajiLayout.value.dataidgajilayout; 
+      var nominal: any = this.formGajiLayout.value.nominal;
       return new Promise (resolve => {
         const paramTambah = new FormData();
-        paramTambah.append('username', usernamePengguna);
-        paramTambah.append('password', passwordPengguna);
-        paramTambah.append('nama', namaPengguna);
-        paramTambah.append('level', levelPengguna);
-        paramTambah.append('mulai', mulaiPengguna);
+        paramTambah.append('idpengguna', this.idpengguna);
+        paramTambah.append('idgajilayout', idgajilayout);
+        paramTambah.append('nominal', nominal);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
@@ -321,7 +350,7 @@ export class PenggunaComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'pengguna/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramTambah, 'gajisink/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -335,15 +364,10 @@ export class PenggunaComponent {
           } else if (res.status == 99){
             this.loadingButton = false;
             this.popForm = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data Pengguna!'});
-            if (this.total == 0){
-              this.cari = '';
-              localStorage.removeItem('paging_pengguna')
-            }
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menambah data Akses Pengguna!'});
             this.page = 1;
             this.totalinput = 0;
             this.listData();
-            document.getElementById('tabel').scrollTo(0, 0);
             this.InfiniteData = true;
           }
         }, (err) => {
@@ -368,7 +392,8 @@ export class PenggunaComponent {
     this.loadingForm = true;
     return new Promise (() => {
       const dataPerbarui = new FormData();
-      dataPerbarui.append('idpengguna', id);
+      dataPerbarui.append('idpengguna', this.idpengguna);
+      dataPerbarui.append('idgajisink', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -376,7 +401,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(dataPerbarui, 'pengguna/data', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(dataPerbarui, 'gajisink/data', {headers}).subscribe((res: any) => {
         if (res.status == 1) {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'akses data ditolak!' });
           this.auth.logout();
@@ -384,16 +409,15 @@ export class PenggunaComponent {
           this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'pastikan data yang diperbaharui sudah benar!'});
           this.loadingForm = false;
           this.popForm = false;
+        } else if (res.status == 3) {
+          this.messageService.add({ severity: 'error', summary: res.pesan, detail: 'pastikan data yang diperbaharui sudah benar!'});
+          this.loadingForm = false;
+          this.popForm = false;
         } else if (res.status == 99) {
           this.loadingForm = false;
-          this.namaPengguna = res.nama;
-          this.usernamePengguna = res.username;
-          this.passwordPengguna = res.password;
-          this.selectedLevelPengguna = res.level;
-          // var mulai = res.mulai;
-          // this.convertDateFormat(res.mulai);
-          // this.mulaiPengguna = mulai;
-          // console.log(mulai)
+          this.isidataselectgajilayout = [{idgajilayout: res.idgajilayout, gajilayout: res.gajilayoutteks}];
+          this.idselectgajilayout = res.idgajilayout;
+          this.nominal = res.nominal;
         }
       }, (err) => {
         this.loadingForm = false;
@@ -412,40 +436,22 @@ export class PenggunaComponent {
     })
   }
 
-  convertDateFormat(originalDate: string): string {
-    const parts = originalDate.split('-');
-    const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-    return this.mulaiPengguna = formattedDate;
-  }
-
   async perbarui(){
+    console.log("tes aja bos")
     this.loadingButton = true;
     this.unvalid = true;
-    if(!this.formPengguna.valid){
+    if(!this.formGajiLayout.valid){
       this.loadingButton = false;
       return false
     } else {
-      var namaPengguna: any = this.formPengguna.value.namaPengguna.replace(/\b\w/g, (char: string) => char.toUpperCase());
-      var usernamePengguna: any = this.formPengguna.value.usernamePengguna;
-      var passwordPengguna: any = this.formPengguna.value.passwordPengguna;
-      var mulaiPengguna: any = this.formPengguna.value.mulaiPengguna;
-      var levelPengguna: any = this.levelPengguna;
-      const parts = mulaiPengguna.split("-");
-      console.log(parts)
-      // mulaiPengguna = parts.join("/");
-      if (this.api.kataKasar(namaPengguna)){
-        this.loadingButton = false;
-        this.messageService.add({ severity: 'error', summary: 'Text/Promt Error!', detail: 'Data yang anda input mengandung kata-kata yang dilarang.'});
-        return false
-      }
+      var idgajilayout: any = this.formGajiLayout.value.dataidgajilayout; 
+      var nominal: any = this.formGajiLayout.value.nominal;
       return new Promise (async resolve => {
         const paramPerbarui = new FormData();
-        paramPerbarui.append('idpengguna',  this.idlogin);
-        paramPerbarui.append('username', usernamePengguna);
-        paramPerbarui.append('password', passwordPengguna);
-        paramPerbarui.append('nama', namaPengguna);
-        paramPerbarui.append('level', levelPengguna);
-        paramPerbarui.append('mulai', mulaiPengguna);
+        paramPerbarui.append('idpengguna', this.idpengguna);
+        paramPerbarui.append('idgajisink', this.idgajisink);
+        paramPerbarui.append('idgajilayout', idgajilayout);
+        paramPerbarui.append('nominal', nominal);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
@@ -453,7 +459,7 @@ export class PenggunaComponent {
           'sesiidlogin': this.sesiidlogin,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'pengguna/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(paramPerbarui, 'gajisink/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -467,18 +473,15 @@ export class PenggunaComponent {
             this.messageService.add({severity: 'warn', summary: res.pesan, detail: 'Opps, cobalah ketik data yang lain'});
           } else if (res.status == 99){
             this.loadingButton = false;
-            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di Pengguna!'});
+            this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil merubah data di Akses Pengguna!'});
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idpengguna === this.idlogin);
-            if (index !== -1) {
-              this.isidata[index].pengguna = namaPengguna;
-              this.isidata[index].username = usernamePengguna;
-              this.isidata[index].password = passwordPengguna;
-              this.isidata[index].level = levelPengguna;
-              this.isidata[index].mulai = mulaiPengguna;
-            }
+            let index = this.isidata.findIndex(item => item.idpengguna === this.idpengguna);
+            console.log(index)
+            // if (index !== -1) {
+            //   this.isidata [index].penggunaakses = akses;
+            // }
           }
         }, (err) => {
           this.loadingButton = false;
@@ -502,7 +505,8 @@ export class PenggunaComponent {
     this.loadingHapus = id;
     return new Promise (async resolve => {
       const paramHapus = new FormData();
-      paramHapus.append('idpengguna',  id);
+      paramHapus.append('idpengguna', this.idpengguna);
+      paramHapus.append('idgajisink', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
@@ -510,7 +514,7 @@ export class PenggunaComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'pengguna/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(paramHapus, 'gajisink/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -518,10 +522,10 @@ export class PenggunaComponent {
         } else if (res.status == 2){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Pastikan data yang ingin anda akses'});
         } else if (res.status == 99){
-          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data Pengguna!'});
+          this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data Akses Pengguna!'});
           this.totalinput = 0;
           this.listData();
-          var index = this.isidata.findIndex(item => item.idlogin === id);
+          var index = this.isidata.findIndex(item => item.idpengguna === id);
           if (index !== -1){
             this.isidata.splice(index, 1)
           }
@@ -543,18 +547,18 @@ export class PenggunaComponent {
   }
 
   async konfirmHapus(id, target){
-    this.idlogin = id.idpengguna;
+    this.idgajisink = id.idgajisink;
     this.confirmationService.confirm({
       target: target,
-      message: 'yakin ingin menghapus ' + id.nama + '?',
+      message: 'yakin ingin menghapus ' + id.gajilayoutteks + '?',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Hapus',
       rejectLabel: 'Batal',
       dismissableMask: true,
-      key: id.idpengguna,
+      key: id.idgajisink,
       acceptButtonStyleClass:"p-button-danger",
       accept: () => {
-        this.hapusData(id.idpengguna)
+        this.hapusData(id.idgajisink)
       },
       reject: () => {
       }
@@ -563,11 +567,8 @@ export class PenggunaComponent {
 
   //form
   async formKosong(){
-    this.formPengguna.get('namaPengguna').reset();
-    this.formPengguna.get('usernamePengguna').reset();
-    this.formPengguna.get('passwordPengguna').reset();
-    this.formPengguna.get('levelPengguna').reset();
-    this.formPengguna.get('mulaiPengguna').reset();
+    this.formGajiLayout.get('dataidgajilayout').reset();
+    this.formGajiLayout.get('nominal').reset();
   }
 
   //event
@@ -599,59 +600,24 @@ export class PenggunaComponent {
       this.tambah()
     } else if (param == 4){
       this.formGagal = false
-      this.dataList(this.idlogin)
+      this.dataList(this.idgajisink)
     } else if (param == 5){
       this.formGagal = false
       this.perbarui()
     }
   }
 
-  async levelAksesPengguna(item){
-    var dataPage = {
-      cari: this.cari,
-      scrl: this.scrollTable,
-      isi: this.isidata,
-      page: this.page,
-      idlogin: item.idpengguna
-    }
-    localStorage.setItem('pagingPengguna', JSON.stringify(dataPage));
-    const navigationExtras: NavigationExtras = {
-    queryParams: {
-      d: item.nama,
-      e: item.levelteks
-    }};
-    this.route.navigate(['pengguna/akses-level-pengguna/' + item.idpengguna], navigationExtras);
-  }
-
-  async gajiSink(item){
-    var dataPage = {
-      cari: this.cari,
-      scrl: this.scrollTable,
-      isi: this.isidata,
-      page: this.page,
-      pengguna: item.pengguna
-    }
-    localStorage.setItem('pagingPengguna', JSON.stringify(dataPage));
-    const navigationExtras: NavigationExtras = {
-    queryParams: {
-      d: item.nama,
-      e: item.levelteks
-    }};
-    this.route.navigate(['pengguna/gaji-sink/' + item.idpengguna], navigationExtras);
-  }
-
   async openPop(p1, p2){
     if (p2 == 1){
       this.cekTambah();
-      this.popForm = true;
-      this.namaForm = 'Tambah Pengguna';
+        this.popForm = true;
+        this.namaForm = 'Tambah Gaji Sink';
     } else if (p2 == 2){
-      this.dataList(p1.idpengguna)
+      this.dataList(p1.idgajisink)
       this.popForm = true;
-      this.dataLevelPengguna;
-      console.log(this.dataLevelPengguna)
-      this.namaForm = 'Perbarui Data Pengguna';
-      this.idlogin = p1.idpengguna;
+      // this.selectdatagajisink;
+      this.namaForm = 'Perbarui Data Gaji Sink';
+      this.idgajisink = p1.idgajisink;
     }
   }
 
@@ -670,18 +636,28 @@ export class PenggunaComponent {
     }, 500);
   }
 
-  //select event
-  async openLevelPengguna(e){
-    console.log('Trigger dataLevelPengguna')
-    this.dataLevelPengguna;
-    // this.dataList();
+  async kembali(){
+    this.route.navigateByUrl('pengguna')
   }
 
-  async selectedLevel(e){
-    if (e !== undefined){
-      this.teksLevelAkses = e.teksLevelAkses;
-      this.levelPengguna = e.idLevelAkses;
-    }
+  //event select gajilayout
+  async openGajiLayout(e){
+    this.isidataselectgajilayout = [];
+    this.pageselectgajilayout = 1;
+    this.cariselectgajilayout = "";
+    this.selectGajiLayout()
+  }
+
+  async onScrollingGajiLayout(){
+    this.pageselectgajilayout = parseInt(this.pageselectgajilayout) + 1;
+    this.totalinputselectgajilayout = this.totalselectgajilayout;
+    this.selectGajiLayout();
+  }
+
+  async cariDataGajiLayout(e){
+    this.cariselectgajilayout = e.term;
+    this.pageselectgajilayout = 1;
+    this.selectGajiLayout()
   }
 
   noSpaceValidator(control) {
@@ -692,7 +668,7 @@ export class PenggunaComponent {
   }
 
   async downloadexcel(){
-    var header = ['Id pengguna',  'Pengguna']
-    this.excel.generateExcel('Data pengguna', 'pengguna', header, this.isidata)
+    var header = ['ID Gaji Sink',  'ID Gaji Layout', 'Nominal', 'Gaji Layout']
+    this.excel.generateExcel('Gaji Sink', 'gajisink', header, this.  isidata)
   }
 }

@@ -141,8 +141,9 @@ export class PengeluaranComponent {
           this.api.setTitle();
           this.loadingData = false;
           this.pageSukses = true;
-          this.hasildatadebit = res.hasildatadebit;
-          this.hasildatakredit = res.hasildatakredit;
+          this.hasildatadebit = res.hasildebit;
+          this.hasildatakredit = res.hasilkredit;
+          console.log(res)
         }
       }, ((err) => {
         if (err.status == 401){
@@ -210,7 +211,7 @@ export class PengeluaranComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(param, 'otomatispengeluaranteller/selectdebitpemasukan', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'otomatispengeluaranteller/selectdebitpengeluaran', {headers}).subscribe((res: any) => {
         this.loadingDebit = false;
         this.collectionselectdebit = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){
@@ -331,7 +332,7 @@ export class PengeluaranComponent {
         'sesiidlogin': this.sesiidlogin,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(param, 'otomatispengeluaranteller/selectkreditpemasukan', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'otomatispengeluaranteller/selectkreditpengeluaran', {headers}).subscribe((res: any) => {
         this.loadingKredit = false;
         this.collectionselectkredit = Math.ceil(parseInt(res.total) / parseInt(res.length));
         if (res.status == 1){

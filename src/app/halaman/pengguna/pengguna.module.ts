@@ -13,10 +13,11 @@ import { ApiService } from 'src/app/services/api.service';
 import { AksesLevelPenggunaComponent } from './akses-level-pengguna/akses-level-pengguna.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { GajiSinkComponent } from './gaji-sink/gaji-sink.component';
 
 
 @NgModule({
-  declarations: [PenggunaComponent, AksesLevelPenggunaComponent],
+  declarations: [PenggunaComponent, AksesLevelPenggunaComponent, GajiSinkComponent],
   imports: [
     CommonModule,
     PenggunaRoutingModule,
