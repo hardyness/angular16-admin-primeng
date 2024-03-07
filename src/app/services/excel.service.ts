@@ -37,7 +37,8 @@ export class ExcelService {
 
     worksheet.addRow([]);
     const footerRow = worksheet.addRow(['Diunduh pada ' + new Date().toLocaleDateString('ID')]);
-    worksheet.addRow(['Source: Cordova Souvenir Web Admin']);
+    footerRow.font.bold = true;
+    worksheet.addRow(['Source: KBM Master']);
     worksheet.columns.forEach(column => {
       let maxLength = 0;
       column.eachCell({ includeEmpty: true }, cell => {
