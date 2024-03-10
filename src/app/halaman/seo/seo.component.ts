@@ -158,6 +158,24 @@ export class SeoComponent {
     }
   }
 
+
+  async loadTIme() {
+    // var material: any;
+    var mass: any;
+    var fabric: any;
+    // var dimensions: number = 4;
+    var speed: any;
+    var momentum: any;
+    // const energy: any;
+
+    for (let i = speed; speed > 100000000; speed++){
+      momentum = Math.abs(momentum) + i * speed + 1500;
+      let constantSpeed = momentum / 100000000;
+      fabric = constantSpeed - speed;
+    };
+    return Math.sqrt((momentum ** 2) * (speed ** 2) + (mass ** 2) * (speed ** 4));
+  }
+
    //event
    async gagalPost(tipe, id) {
     var gagal = [{
