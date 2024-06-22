@@ -6,9 +6,9 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms"
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { FileUpload, UploadEvent } from 'primeng/fileupload';
-import { ExcelService } from 'src/app/services/excel.service';
 
-const sesilogin = 'masterkbmv4_login';
+
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-katalog',
@@ -36,7 +36,7 @@ export class KatalogComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -99,7 +99,7 @@ export class KatalogComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
   ) {}
 
   async ngOnInit() {
@@ -115,7 +115,7 @@ export class KatalogComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -146,7 +146,7 @@ export class KatalogComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'katalog/list', {headers}).subscribe((res: any) => {
@@ -201,7 +201,7 @@ export class KatalogComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(cekmenu, 'katalog/cek', {headers}).subscribe((res: any) => {
@@ -239,7 +239,7 @@ export class KatalogComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'katalog/select', {headers}).subscribe((res: any) => {
@@ -308,18 +308,18 @@ export class KatalogComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('kategorikatalog', this.idkategori);
-        paramTambah.append('katalog', katalog);
-        paramTambah.append('gambar', this.uploadGambar[0]);
+        const param = new FormData();
+        param.append('kategorikatalog', this.idkategori);
+        param.append('katalog', katalog);
+        param.append('gambar', this.uploadGambar[0]);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'katalog/tambah', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'katalog/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -369,7 +369,7 @@ export class KatalogComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(dataPerbarui, 'katalog/data', {headers}).subscribe((res: any) => {
@@ -420,21 +420,21 @@ export class KatalogComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idkatalog',  this.idkatalog);
-        paramPerbarui.append('kategorikatalog', this.idkategori);
-        paramPerbarui.append('katalog', katalog);
+        const param = new FormData();
+        param.append('idkatalog',  this.idkatalog);
+        param.append('kategorikatalog', this.idkategori);
+        param.append('katalog', katalog);
         if(this.selectedFiles.get(1) !== undefined){
-          paramPerbarui.append('gambar', this.selectedFiles.get(1));
+          param.append('gambar', this.selectedFiles.get(1));
         }
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'katalog/perbarui', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'katalog/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -483,16 +483,16 @@ export class KatalogComponent {
 
   async hapusData(id){
     return new Promise (async resolve => {
-      const paramPerbarui = new FormData();
-      paramPerbarui.append('idkatalog',  id);
+      const param = new FormData();
+      param.append('idkatalog',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramPerbarui, 'katalog/hapus', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'katalog/hapus', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -690,8 +690,4 @@ export class KatalogComponent {
     }
   }
 
-  async downloadexcel(){
-    var header = ['Id Katalog', 'Kategori Katalog','Katalog', 'Gambar']
-    this.excel.generateExcel('Data Katalog', 'Katalog', header, this.isidata)
-  }
 }

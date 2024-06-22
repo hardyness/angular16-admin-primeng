@@ -1,0 +1,368 @@
+<p-toast position="top-center"></p-toast>
+<p-confirmDialog [rejectVisible]="false" [closable]="false" [style]="scrWidth >= 780 ? { width: '50vw' } : { width: '80vw' }"></p-confirmDialog>
+
+<!-- loading -->
+<div *ngIf="pageSukses == false && pageGagal == false" class="flex align-items-start w-full h-screen flex-column">
+  <p-skeleton class="w-12 mb-4" height="30px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="75px"></p-skeleton>
+  <p-skeleton class="w-12 mb-4" height="150px"></p-skeleton>
+  <p-skeleton class="w-12" height="150px"></p-skeleton>
+</div>
+
+<!-- errorPage -->
+<div class="grid flex flex-column justify-content-center align-items-center w-full h-screen" *ngIf="pageGagal">
+  <img src="assets/ilustrasi/pageerror.png" class="w-3" />
+  <b>Opps, terjadi kesalahan!</b>
+  <p class="fs-10" style="text-align: center">Coba periksa koneksi internet anda lalu ulangi kembali</p>
+  <button
+    type="button"
+    label="Ulangi"
+    pButton
+    pRipple
+    class="p-button-text p-button-rounded"
+    icon="pi pi-refresh"
+    style="color: rgb(34, 155, 7)"
+    *ngFor="let error of load"
+    (click)="reload(error.tipe, '')"
+  ></button>
+</div>
+
+<!-- successPage -->
+<div class="grid" *ngIf="pageSukses" [class.divdisabled]="loadingData">
+  <div class="col-12">
+    <div class="card">
+      <div class="input-group mb-3">
+        <input 
+          type="text"
+          class="form-control fs-8"
+          placeholder="Cari data"
+          aria-label="Cari data"
+          aria-describedby="button-addon2"
+          [(ngModel)]="cari"
+          (ngModelChange)="search($event)"
+          (keyup.enter)="emitsearch()"
+          >
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" pTooltip="Cari" (click)="emitsearch()">
+          <i class="pi pi-search" ></i>
+        </button>
+      </div>
+      <div class="card-header align-items-center flex justify-content-between responsive-header">
+        <div class="button-group">
+          <button
+            type="button"
+            pButton
+            pRipple
+            class="p-button-rounded p-button-plain"
+            icon="pi pi-plus"
+            pTooltip="Tambah data (ctrl/⌘ + q)"
+            (click)="openPop('', 1)"
+          ></button>
+          <button
+            type="button"
+            pButton
+            pRipple
+            class="p-button-text p-button-rounded p-button-plain"
+            icon="pi pi-refresh"
+            style="color: #00437e"
+            pTooltip="Refresh data"
+            (click)="refresh()"
+          ></button>
+          <button
+            type="button"
+            pButton
+            pRipple
+            [class]="getStatistic ? 'p-button-rounded p-button-plain p-button-warning' : 'p-button-text p-button-rounded p-button-plain'"
+            icon="pi pi-chart-bar"
+            style="color: #00437e"
+            pTooltip="Statistik"
+            (click)="openChart()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-text p-button-rounded p-button-plain"
+            icon="pi pi-print"
+            style="color: #404040"
+            pTooltip="Print"
+            tooltipPosition="left"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-text p-button-rounded p-button-plain"
+            icon="pi pi-download"
+            style="color: #404040"
+            pTooltip="Download"
+            tooltipPosition="left"
+          ></button>
+        </div>
+
+        <p-paginator
+          (onPageChange)="pageChange($event)"
+          pageLinkSize="3"
+          styleClass="fs-8 paginator-responsive"
+          [first]="aktifpage"
+          [rows]="totaltampil"
+          [totalRecords]="total"
+          [rowsPerPageOptions]="total > 20 ? [10, 15, 20] : [10, 15]"
+        ></p-paginator>
+
+        <label class="fs-8 total-data-label">
+          Total data: <b>{{ total }}</b>
+        </label>
+      </div>
+
+      <p-progressBar mode="indeterminate" *ngIf="loadingData"></p-progressBar>
+      <div *ngIf="total !== 0" style="overflow-x: auto; height: 420px" id="tabel">
+        <table class="table table-bordered table-hover">
+          <thead style="position: sticky; top: 0; z-index: 99" class="table-light">
+            <tr class="fs-9">
+              <th scope="col" data-valign="middle" *ngFor="let colom of tablecolom" [class]="colom.class" (click)="colom.order ? orderData(colom.order) : ''">
+                {{colom.namakolom}}
+                <i
+                  [hidden]="lastOrder !== colom.order"
+                  [class]="!direction ? ' pi pi-sort-amount-down-alt fs-8 ml-2' : 'pi pi-sort-amount-up fs-8 ml-2'"
+                  style="color: #686868"
+                  ></i>
+              </th>
+              <th scope="col">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of isidata">
+              <td colspan="9" *ngIf="loadingHapus == item.idtransaksibarang">
+                <p-progressBar mode="indeterminate" [style]="{ background: 'red' }"></p-progressBar>
+                <b style="color: red" class="fs-8">Menghapus data {{ item.namasuplier }}</b>
+              </td>
+              <th scope="row" style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>{{ item.no }}</p>
+              </th>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.waktutransaksi }}
+                  <p-tag styleClass="fs-6" severity="danger" value="Baru" [rounded]="true" [hidden]="item.selisihwaktu > 60" />
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.namabarang }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.kodebarang }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.barcode }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.jumlahkarton || '-' }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.jumlahpcs || '-' }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.hargabeli || '-' }}
+                </p>
+              </td>
+              <td style="padding-top: 16px; padding-bottom: 16px" class="fs-8" *ngIf="loadingHapus !== item.idtransaksibarang">
+                <p>
+                  {{ item.hargajual || '-' }}
+                </p>
+              </td>
+              <td style="width: 50px">
+                <div class="btn-group dropstart" #confirmTarget>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text p-button-rounded p-button-plain"
+                    data-bs-toggle="dropdown"
+                    icon="pi pi-ellipsis-v"
+                    style="color: #404040"
+                    aria-expanded="false"
+                  ></button>
+                  <ul class="dropdown-menu fs-8">
+                    <li (click)="openPop(item, 2)">
+                      <button class="dropdown-item" type="button">
+                        <i class="pi pi-file-edit mr-4 fs-8" style="color: #0eb705"></i>
+                        Perbarui
+                      </button>
+                    </li>
+                    <li (click)="konfirmHapus(item, confirmTarget)">
+                      <button class="dropdown-item" type="button">
+                        <i class="pi pi-trash mr-4 fs-8" style="color: red"></i>
+                        Hapus
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <p-confirmPopup [key]="item.id_suplier"></p-confirmPopup>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-body flex flex-column align-items-center justify-content-center" *ngIf="total == 0">
+        <img src="assets/ilustrasi/nodata.png" class="w-3" />
+        <p class="text-2xl fs-10">tidak ada data</p>
+      </div>
+    </div>
+
+    <!-- chart -->
+    <div class="card" *ngIf="getStatistic">
+      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [header]="namaForm"
+  [(visible)]="popForm"
+  position="top"
+  [modal]="true"
+  [closable]="!loadingButton"
+  maximizable="true"
+  focusTrap="true"
+  [style]="scrWidth >= 780 ? { width: '50vw' } : { width: '100%', height: '100%' }"
+  (onHide)="formKosong()"
+  #d
+>
+  <!-- loading -->
+  <div *ngIf="loadingForm" class="flex justify-content-center align-items-center w-full h-18rem">
+    <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="3"></p-progressSpinner>
+  </div>
+  <!-- errorForm -->
+  <div class="grid flex flex-column justify-content-center align-items-center w-full h-18rem" *ngIf="formGagal">
+    <b>Opps, terjadi kesalahan!</b>
+    <p>Coba periksa koneksi internet anda lalu ulangi kembali</p>
+    <button
+      type="button"
+      label="Ulangi"
+      pButton
+      pRipple
+      class="p-button-text p-button-rounded"
+      icon="pi pi-refresh"
+      style="color: rgb(34, 155, 7)"
+      *ngFor="let error of load"
+      (click)="reload(error.tipe, '')"
+    ></button>
+  </div>
+  <!-- successForm -->
+  <form
+    [formGroup]="formInput"
+    class="mt-3"
+    (keyup.enter)="namaForm == 'Tambah Barang' ? tambah() : perbarui()"
+    *ngIf="!formGagal && !loadingForm"
+  >
+
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label for="namabarang" class="font-semibold text-sm">Nama Barang</label>
+      <input
+        pInputText
+        id="suplier"
+        [(ngModel)]="namasuplier"
+        formControlName="namasuplier"
+        class="w-12 border-radius-10"
+        autofocus
+      />
+    </div>
+
+    <div class="form-container mt-5 flex flex-column">
+      <div class="input-pair flex justify-content-center">
+        <div class="flex flex-column">
+          <label for="kodesuplier" class="font-semibold text-sm">Kode Suplier</label>
+          <input
+            pInputText
+            id="kodesuplier"
+            [(ngModel)]="kodesuplier"
+            formControlName="kodesuplier"
+            class="w-12 border-radius-10"
+          />
+        </div>
+    
+        <div class="flex flex-column">
+          <label for="lokasisuplier" class="font-semibold text-sm">Lokasi Suplier</label>
+          <input
+            pInputText
+            id="lokasisuplier"
+            [(ngModel)]="lokasisuplier"
+            formControlName="lokasisuplier"
+            class="w-12 border-radius-10"
+          />
+        </div>
+      </div>
+    
+      <div class="input-pair flex justify-content-center">
+        <div class="flex flex-column">
+          <label for="kontaksuplier" class="font-semibold text-sm">Kontak Suplier</label>
+          <input
+            pInputText
+            id="kontaksuplier"
+            [(ngModel)]="kontaksuplier"
+            formControlName="kontaksuplier"
+            class="w-12 border-radius-10"
+          />
+        </div>
+    
+        <div class="flex flex-column">
+          <label for="pjsuplier" class="font-semibold text-sm">PJ Suplier</label>
+          <input
+            pInputText
+            id="pjsuplier"
+            [(ngModel)]="pjsuplier"
+            formControlName="pjsuplier"
+            placeholder="(Opsional)"
+            class="w-12 border-radius-10"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 flex justify-content-center flex-column">
+      <label for="keterangan" class="font-semibold text-sm">Keterangan</label>
+      <textarea 
+        pInputTextarea
+        id="keterangan"
+        rows="4"
+        cols="30" 
+        [(ngModel)]="keterangan"
+        formControlName="keterangan"
+        placeholder="(Opsional)"
+      >
+      </textarea>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      *ngIf="namaForm == 'Tambah Barang'"
+      label="Tambah"
+      styleClass="p-button-text"
+      [hidden]="formGagal || formInput.invalid || loadingForm"
+      [loading]="loadingButton"
+      (click)="tambah()"
+    ></p-button>
+    <p-button
+      *ngIf="namaForm == 'Perbarui Data Barang'"
+      label="Perbarui"
+      styleClass="p-button-text"
+      [hidden]="formGagal || formInput.invalid || loadingForm"
+      [loading]="loadingButton"
+      (click)="perbarui()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+

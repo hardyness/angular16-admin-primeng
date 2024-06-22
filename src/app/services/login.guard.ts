@@ -3,7 +3,7 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, from, mergeMap } from 'rxjs';
 import { AuthService } from './auth.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ export class LoginGuard  {
 
   constructor(private router: Router) { }
   async canActivate(): Promise<boolean> {
-    const session = await JSON.parse(localStorage.getItem(sesilogin));
-    if (session !== null) {
-      this.router.navigate(['/kantor']);
+    const data = localStorage.getItem(sesilogin);
+    if (data !== null) {
+      this.router.navigate(['/suplier?p=1']);
       return false;
     }
     else {

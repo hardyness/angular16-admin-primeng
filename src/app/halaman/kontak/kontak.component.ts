@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { HttpHeaders } from '@angular/common/http';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-kontak',
@@ -14,7 +14,7 @@ const sesilogin = 'masterkbmv4_login';
 })
 export class KontakComponent {
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -70,7 +70,7 @@ export class KontakComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -86,7 +86,7 @@ export class KontakComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'kontakkami/data', {headers}).subscribe((res: any) => {
@@ -143,23 +143,23 @@ export class KontakComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('alamat', this.alamat);
-        paramPerbarui.append('telepon', this.telephone);
-        paramPerbarui.append('email', this.email);
-        paramPerbarui.append('instagram', this.instagram);
-        paramPerbarui.append('facebook', this.facebook);
-        paramPerbarui.append('tiktok', this.tiktok);
-        paramPerbarui.append('lat', this.lat);
-        paramPerbarui.append('lng', this.lng);
+        const param = new FormData();
+        param.append('alamat', this.alamat);
+        param.append('telepon', this.telephone);
+        param.append('email', this.email);
+        param.append('instagram', this.instagram);
+        param.append('facebook', this.facebook);
+        param.append('tiktok', this.tiktok);
+        param.append('lat', this.lat);
+        param.append('lng', this.lng);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-          this.api.postData(paramPerbarui, 'kontakkami/perbarui', {headers}).subscribe((res: any) => {
+          this.api.postData(param, 'kontakkami/perbarui', {headers}).subscribe((res: any) => {
             if (res.status == 1){
               this.loadingButton = false;
               this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

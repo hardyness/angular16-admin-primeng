@@ -5,6 +5,8 @@ import { LayoutService } from "./service/app.layout.service";
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { filter, first } from 'rxjs';
+import * as CryptoJS from 'crypto-js';
+import { ApiService } from '../services/api.service';
 
 @Component({
     selector: 'app-topbar',
@@ -18,7 +20,7 @@ export class AppTopBarComponent {
     async getScreenSize(event?) {
       this.scrWidth = window.innerWidth;
     }
-
+    title: any;
     sch: any;
     search: any;
     urlnow: any;
@@ -36,8 +38,6 @@ export class AppTopBarComponent {
 
     @ViewChild('topbarmenu') menu!: ElementRef;
 
-    @ViewChild('searchInput') searchInput!: ElementRef;
-
     constructor(
       public layoutService: LayoutService,
       public auth: AuthService,
@@ -45,6 +45,7 @@ export class AppTopBarComponent {
       private router: Router,
       private location: Location,
       private confirmationService: ConfirmationService,
+      private api: ApiService,
     ) {    
         this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val: NavigationEnd) => {
           setTimeout(() => {
@@ -53,23 +54,15 @@ export class AppTopBarComponent {
             this.titlepage = header;
           }, 300);
         });
+        const sesi = localStorage.getItem(this.api.sesilogin);
+        this.decrypt(sesi)
      }
 
-     private getPageTitle(url: string): string {
-      const pathSegments = this.location.path().split('/').filter(Boolean);
-      const queryParams = new URLSearchParams(url.split('?')[1]);
-      const firstSegment = pathSegments[0]?.charAt(0).toUpperCase() + pathSegments[0]?.slice(1);
-      const secondSegment = this.removeDash(pathSegments[1]);
-      const titleSegments = [firstSegment, secondSegment].filter(Boolean);
-      return titleSegments.join(' - ');
-    }
-
-    private removeDash(text: string): any {
-      if (text !== undefined){
-        return text.split('-')
-        .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
-        .join(' ');
-      }
+     async decrypt(data: string) {
+      const bytes = CryptoJS.AES.decrypt(data,'wh-AES-secrt-key-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
+      const decrypted = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      this.title = decrypted.nama;
+      return decrypted;
     }
 
     async ngOnInit() {

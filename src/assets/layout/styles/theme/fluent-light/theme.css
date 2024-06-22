@@ -3545,11 +3545,11 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-paginator {
-  background: #ffffff;
+  /* background: #ffffff; */
   color: #605e5c;
   border: solid #f3f2f1;
   border-width: 0;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem; */
   border-radius: 2px;
 }
 .p-paginator .p-paginator-first,
@@ -3559,8 +3559,8 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background-color: transparent;
   border: 0 none;
   color: #605e5c;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
   margin: 0.143rem;
   transition: box-shadow 0.2s;
   border-radius: 2px;
@@ -3585,23 +3585,25 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   height: 2.357rem;
+  border-radius: 13px;
 }
 .p-paginator .p-dropdown .p-dropdown-label {
-  padding-right: 0;
+  padding-right: 0.5rem;
+  padding-top: 0.3rem;
 }
 .p-paginator .p-paginator-page-input {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
 .p-paginator .p-paginator-page-input .p-inputtext {
-  max-width: 2.357rem;
+  max-width: 1.8rem;
 }
 .p-paginator .p-paginator-current {
   background-color: transparent;
   border: 0 none;
   color: #605e5c;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
   margin: 0.143rem;
   padding: 0 0.5rem;
 }
@@ -3609,14 +3611,14 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background-color: transparent;
   border: 0 none;
   color: #605e5c;
-  min-width: 2.357rem;
-  height: 2.357rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
   margin: 0.143rem;
   transition: box-shadow 0.2s;
-  border-radius: 2px;
+  border-radius: 8px;
 }
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: #edebe9;
+  background: #c7dff3;
   border-color: #edebe9;
   color: #323130;
 }
@@ -4618,7 +4620,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 .p-fileupload .p-fileupload-buttonbar {
   background: #faf9f8;
-  padding: 1rem;
+  padding: 0.5rem;
   border: 1px solid #a19f9d;
   color: #323130;
   border-bottom: 0 none;
@@ -4627,6 +4629,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-fileupload .p-fileupload-buttonbar .p-button {
   margin-right: 0.5rem;
+  border-radius: 12px
 }
 .p-fileupload .p-fileupload-buttonbar .p-button.p-fileupload-choose.p-focus {
   outline: 0 none;
@@ -4635,7 +4638,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-fileupload .p-fileupload-content {
   background: #ffffff;
-  padding: 2rem 1rem;
+  padding: 0.8rem 0.8rem;
   border: 1px solid #a19f9d;
   color: #323130;
   border-bottom-right-radius: 2px;
@@ -6236,7 +6239,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-inplace .p-inplace-display {
-  padding: 0.5rem 0.5rem;
+  /* padding: 0.5rem 0.5rem; */
   border-radius: 2px;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }

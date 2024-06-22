@@ -18,6 +18,10 @@ import { TipepembiayaanComponent } from './tipepembiayaan/tipepembiayaan.compone
 import { AreaComponent } from './area/area.component';
 import { SubheaderComponent } from './subheader/subheader.component';
 import { CoaComponent } from './coa/coa.component';
+import { KategoribarangComponent } from './kategoribarang/kategoribarang.component';
+import { BarangComponent } from './barang/barang.component';
+import { SuplierComponent } from './suplier/suplier.component';
+import { BarangmasukComponent } from './barangmasuk/barangmasuk.component';
 
 const routes: Routes = [
   // {
@@ -89,8 +93,28 @@ const routes: Routes = [
     component: AreaComponent,
   },
   {
+    path: 'kategoribarang',
+    component: KategoribarangComponent,
+    data: {p: 1}
+  },
+  {
+    path: 'barang',
+    component: BarangComponent,
+    data: {p: 1}
+  },
+  {
+    path: 'suplier',
+    component: SuplierComponent,
+    data: {p: 1}
+  },
+  {
+    path: 'barangmasuk',
+    component: BarangmasukComponent,
+    data: {p: 1}
+  },
+  {
     path: '',
-    redirectTo: '/kantor',
+    redirectTo: '/kategoribarang',
     pathMatch: 'full'
   }
 ];

@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-jaminan',
@@ -36,7 +36,7 @@ export class JaminanComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -80,7 +80,7 @@ export class JaminanComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService
   ) {}
 
@@ -124,7 +124,7 @@ export class JaminanComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -149,7 +149,7 @@ export class JaminanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'jaminan/list', {headers}).subscribe((res: any) => {
@@ -205,7 +205,7 @@ export class JaminanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'jaminan/cek', {headers}).subscribe((res: any) => {
@@ -246,16 +246,16 @@ export class JaminanComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('jaminan', namaJaminan);
+        const param = new FormData();
+        param.append('jaminan', namaJaminan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'jaminan/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'jaminan/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -307,7 +307,7 @@ export class JaminanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'jaminan/data', {headers}).subscribe((res: any) => {
@@ -353,17 +353,17 @@ export class JaminanComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idjaminan',  this.idjaminan);
-        paramPerbarui.append('jaminan', namaJaminan);
+        const param = new FormData();
+        param.append('idjaminan',  this.idjaminan);
+        param.append('jaminan', namaJaminan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'jaminan/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'jaminan/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -407,16 +407,16 @@ export class JaminanComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idjaminan',  id);
+      const param = new FormData();
+      param.append('idjaminan',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'jaminan/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'jaminan/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -535,10 +535,5 @@ export class JaminanComponent {
       this.page = parseInt(this.page) + 1;
       this.listData();
     }, 500);
-  }
-
-  async downloadexcel(){
-    var header = ['Id jaminan',  'Jaminan']
-    this.excel.generateExcel('Data jaminan', 'jaminan', header, this.isidata)
   }
 }

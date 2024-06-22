@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-header',
@@ -37,7 +37,7 @@ export class HeaderComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -117,7 +117,7 @@ export class HeaderComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService
   ) {}
 
@@ -166,7 +166,7 @@ export class HeaderComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -184,7 +184,7 @@ export class HeaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'header/list', {headers}).subscribe((res: any) => {
@@ -240,7 +240,7 @@ export class HeaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'header/cek', {headers}).subscribe((res: any) => {
@@ -279,7 +279,7 @@ export class HeaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'header/selecturutan', {headers}).subscribe((res: any) => {
@@ -349,18 +349,18 @@ export class HeaderComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('tipe', this.idselecttipe);
-        paramTambah.append('header', namaHeader);
-        paramTambah.append('rumus', rumus);
+        const param = new FormData();
+        param.append('tipe', this.idselecttipe);
+        param.append('header', namaHeader);
+        param.append('rumus', rumus);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'header/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'header/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -412,7 +412,7 @@ export class HeaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'header/data', {headers}).subscribe((res: any) => {
@@ -468,15 +468,15 @@ export class HeaderComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idheader',  this.idheader);
-        paramPerbarui.append('header', namaHeader);
-        paramPerbarui.append('rumus', rumus);
+        const param = new FormData();
+        param.append('idheader',  this.idheader);
+        param.append('header', namaHeader);
+        param.append('rumus', rumus);
         if (this.idselecttipe == undefined || this.idselecttipe == null){
-          paramPerbarui.append('tipe', this.tipe);
+          param.append('tipe', this.tipe);
         }
         else {
-          paramPerbarui.append('tipe', this.idselecttipe);
+          param.append('tipe', this.idselecttipe);
         }
 
         console.log(this.idselecttipe);
@@ -484,10 +484,10 @@ export class HeaderComponent {
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'header/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'header/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -539,7 +539,7 @@ export class HeaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'header/dataurutan', {headers}).subscribe((res: any) => {
@@ -581,17 +581,17 @@ export class HeaderComponent {
     } else {
       var urutan: any = this.formUrutan.value.urutan;
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idheader', this.idheader);
-        paramPerbarui.append('urutan', urutan);
+        const param = new FormData();
+        param.append('idheader', this.idheader);
+        param.append('urutan', urutan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'header/perbaruiurutan', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'header/perbaruiurutan', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -635,16 +635,16 @@ export class HeaderComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idheader',  id);
+      const param = new FormData();
+      param.append('idheader',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'header/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'header/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -771,11 +771,6 @@ export class HeaderComponent {
       this.page = parseInt(this.page) + 1;
       this.listData();
     }, 500);
-  }
-
-  async downloadexcel(){
-    var header = ['Id header',  'Header']
-    this.excel.generateExcel('Data header', 'header', header, this.isidata)
   }
 
   //

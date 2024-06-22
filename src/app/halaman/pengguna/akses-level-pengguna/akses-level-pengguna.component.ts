@@ -5,11 +5,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-akses-level-penggunaakses',
@@ -37,7 +37,7 @@ export class AksesLevelPenggunaComponent {
   blockSpace: RegExp = /[^s]/;
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -101,7 +101,7 @@ export class AksesLevelPenggunaComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private route: Router,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService,
     public actRoute: ActivatedRoute,
   ) {}
@@ -146,7 +146,7 @@ export class AksesLevelPenggunaComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -166,7 +166,7 @@ export class AksesLevelPenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'penggunaakses/list', {headers}).subscribe((res: any) => {
@@ -227,7 +227,7 @@ export class AksesLevelPenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(cekmenu, 'penggunaakses/cek', {headers}).subscribe((res: any) => {
@@ -263,17 +263,17 @@ export class AksesLevelPenggunaComponent {
     } else {
       var akses: any = this.formPenggunakses.value.akses; 
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('idpengguna', this.idpengguna);
-        paramTambah.append('akses', akses);
+        const param = new FormData();
+        param.append('idpengguna', this.idpengguna);
+        param.append('akses', akses);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'penggunaakses/tambah', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'penggunaakses/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -321,7 +321,7 @@ export class AksesLevelPenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(dataPerbarui, 'penggunaakses/data', {headers}).subscribe((res: any) => {
@@ -369,18 +369,18 @@ export class AksesLevelPenggunaComponent {
     } else {
       var akses: any = this.formPenggunakses.value.akses;
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idpengguna', this.idpengguna);
-        paramPerbarui.append('idakses', this.idakses);
-        paramPerbarui.append('akses', akses);
+        const param = new FormData();
+        param.append('idpengguna', this.idpengguna);
+        param.append('idakses', this.idakses);
+        param.append('akses', akses);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'penggunaakses/perbarui', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'penggunaakses/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -424,17 +424,17 @@ export class AksesLevelPenggunaComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idpengguna', this.idpengguna);
-      paramHapus.append('idakses', id);
+      const param = new FormData();
+      param.append('idpengguna', this.idpengguna);
+      param.append('idakses', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'penggunaakses/hapus', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'penggunaakses/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -532,14 +532,14 @@ export class AksesLevelPenggunaComponent {
       scrl: this.scrollTable,
       isi: this.isidata,
       page: this.page,
-      idlogin: item.idlogin
+      idakun: item.idakun
     }
     localStorage.setItem('pagingPengguna', JSON.stringify(dataPage));
     const navigationExtras: NavigationExtras = {
     queryParams: {
       d: item.nama
     }};
-    this.route.navigate(['penggunaakses/akses-level-penggunaakses/' + item.idlogin], navigationExtras);
+    this.route.navigate(['penggunaakses/akses-level-penggunaakses/' + item.idakun], navigationExtras);
   }
 
   async openPop(p1, p2){
@@ -604,8 +604,4 @@ export class AksesLevelPenggunaComponent {
     return null;
   }
 
-  async downloadexcel(){
-    var header = ['Id penggunaakses',  'Akses Pengguna']
-    this.excel.generateExcel('Data penggunaakses', 'penggunaakses', header, this.isidata)
-  }
 }

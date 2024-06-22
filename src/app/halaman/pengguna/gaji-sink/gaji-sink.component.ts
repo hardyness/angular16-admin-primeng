@@ -5,11 +5,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-gaji-sink',
@@ -39,7 +39,7 @@ export class GajiSinkComponent {
   blockSpace: RegExp = /[^s]/;
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -109,7 +109,7 @@ export class GajiSinkComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private route: Router,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService,
     public actRoute: ActivatedRoute,
   ) {}
@@ -158,7 +158,7 @@ export class GajiSinkComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -178,7 +178,7 @@ export class GajiSinkComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'gajisink/list', {headers}).subscribe((res: any) => {
@@ -239,7 +239,7 @@ export class GajiSinkComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'gajisink/cek', {headers}).subscribe((res: any) => {
@@ -279,7 +279,7 @@ export class GajiSinkComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'gajisink/selectgajilayout', {headers}).subscribe((res: any) => {
@@ -339,18 +339,18 @@ export class GajiSinkComponent {
       var idgajilayout: any = this.formGajiLayout.value.dataidgajilayout; 
       var nominal: any = this.formGajiLayout.value.nominal;
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('idpengguna', this.idpengguna);
-        paramTambah.append('idgajilayout', idgajilayout);
-        paramTambah.append('nominal', nominal);
+        const param = new FormData();
+        param.append('idpengguna', this.idpengguna);
+        param.append('idgajilayout', idgajilayout);
+        param.append('nominal', nominal);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'gajisink/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'gajisink/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -398,7 +398,7 @@ export class GajiSinkComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'gajisink/data', {headers}).subscribe((res: any) => {
@@ -447,19 +447,19 @@ export class GajiSinkComponent {
       var idgajilayout: any = this.formGajiLayout.value.dataidgajilayout; 
       var nominal: any = this.formGajiLayout.value.nominal;
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idpengguna', this.idpengguna);
-        paramPerbarui.append('idgajisink', this.idgajisink);
-        paramPerbarui.append('idgajilayout', idgajilayout);
-        paramPerbarui.append('nominal', nominal);
+        const param = new FormData();
+        param.append('idpengguna', this.idpengguna);
+        param.append('idgajisink', this.idgajisink);
+        param.append('idgajilayout', idgajilayout);
+        param.append('nominal', nominal);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'gajisink/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'gajisink/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -504,17 +504,17 @@ export class GajiSinkComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idpengguna', this.idpengguna);
-      paramHapus.append('idgajisink', id);
+      const param = new FormData();
+      param.append('idpengguna', this.idpengguna);
+      param.append('idgajisink', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'gajisink/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'gajisink/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -667,8 +667,4 @@ export class GajiSinkComponent {
     return null;
   }
 
-  async downloadexcel(){
-    var header = ['ID Gaji Sink',  'ID Gaji Layout', 'Nominal', 'Gaji Layout']
-    this.excel.generateExcel('Gaji Sink', 'gajisink', header, this.  isidata)
-  }
 }

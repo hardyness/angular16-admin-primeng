@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-tipepembiayaan',
@@ -37,7 +37,7 @@ export class TipepembiayaanComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -89,7 +89,7 @@ export class TipepembiayaanComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService
   ) {}
 
@@ -139,7 +139,7 @@ export class TipepembiayaanComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -157,7 +157,7 @@ export class TipepembiayaanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'tipepembiayaan/list', {headers}).subscribe((res: any) => {
@@ -213,7 +213,7 @@ export class TipepembiayaanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'tipepembiayaan/cek', {headers}).subscribe((res: any) => {
@@ -254,16 +254,16 @@ export class TipepembiayaanComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('tipepembiayaan', namaTipepembiayaan);
+        const param = new FormData();
+        param.append('tipepembiayaan', namaTipepembiayaan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'tipepembiayaan/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'tipepembiayaan/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -315,7 +315,7 @@ export class TipepembiayaanComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'tipepembiayaan/data', {headers}).subscribe((res: any) => {
@@ -362,17 +362,17 @@ export class TipepembiayaanComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idtipepembiayaan',  this.idtipepembiayaan);
-        paramPerbarui.append('tipepembiayaan', namaTipepembiayaan);
+        const param = new FormData();
+        param.append('idtipepembiayaan',  this.idtipepembiayaan);
+        param.append('tipepembiayaan', namaTipepembiayaan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'tipepembiayaan/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'tipepembiayaan/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -416,16 +416,16 @@ export class TipepembiayaanComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idtipepembiayaan',  id);
+      const param = new FormData();
+      param.append('idtipepembiayaan',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'tipepembiayaan/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'tipepembiayaan/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -546,8 +546,4 @@ export class TipepembiayaanComponent {
     }, 500);
   }
 
-  async downloadexcel(){
-    var header = ['Id tipepembiayaan',  'Tipepembiayaan']
-    this.excel.generateExcel('Data tipepembiayaan', 'tipepembiayaan', header, this.isidata)
-  }
 }

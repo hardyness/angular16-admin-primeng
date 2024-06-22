@@ -9,7 +9,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms"
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -130,7 +130,7 @@ export class DashboardComponent implements OnInit {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'beranda/data', {headers}).subscribe((res: any) => {

@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-subheader',
@@ -37,7 +37,7 @@ export class SubheaderComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -130,7 +130,7 @@ export class SubheaderComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService
   ) {}
 
@@ -179,7 +179,7 @@ export class SubheaderComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -197,7 +197,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'subheader/list', {headers}).subscribe((res: any) => {
@@ -253,7 +253,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'subheader/cek', {headers}).subscribe((res: any) => {
@@ -292,7 +292,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'subheader/selecturutan', {headers}).subscribe((res: any) => {
@@ -358,7 +358,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'subheader/selectheader', {headers}).subscribe((res: any) => {
@@ -428,18 +428,18 @@ export class SubheaderComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('idheader', this.idselectheader);
-        paramTambah.append('subheader', namaSubHeader);
-        paramTambah.append('rumus', rumus);
+        const param = new FormData();
+        param.append('idheader', this.idselectheader);
+        param.append('subheader', namaSubHeader);
+        param.append('rumus', rumus);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'subheader/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'subheader/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -492,7 +492,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'subheader/data', {headers}).subscribe((res: any) => {
@@ -548,20 +548,20 @@ export class SubheaderComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idsubheader',  this.idsubheader);
-        paramPerbarui.append('subheader', namaSubheader);
+        const param = new FormData();
+        param.append('idsubheader',  this.idsubheader);
+        param.append('subheader', namaSubheader);
         if (this.idselectrumus == undefined || this.idselectrumus == null){
-          paramPerbarui.append('rumus', this.rumus);
+          param.append('rumus', this.rumus);
         }
         else {
-          paramPerbarui.append('rumus', this.idselectrumus);
+          param.append('rumus', this.idselectrumus);
         }
         if (this.idselectheader == undefined || this.idselectheader == null){
-          paramPerbarui.append('idheader',  this.idheader);
+          param.append('idheader',  this.idheader);
         }
         else {
-          paramPerbarui.append('idheader',  this.idselectheader);
+          param.append('idheader',  this.idselectheader);
         }
 
         console.log(this.idselectrumus);
@@ -569,10 +569,10 @@ export class SubheaderComponent {
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'subheader/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'subheader/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -624,7 +624,7 @@ export class SubheaderComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'subheader/dataurutan', {headers}).subscribe((res: any) => {
@@ -666,17 +666,17 @@ export class SubheaderComponent {
     } else {
       var urutan: any = this.formUrutan.value.urutan;
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idsubheader', this.idsubheader);
-        paramPerbarui.append('urutan', urutan);
+        const param = new FormData();
+        param.append('idsubheader', this.idsubheader);
+        param.append('urutan', urutan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'subheader/perbaruiurutan', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'subheader/perbaruiurutan', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -720,16 +720,16 @@ export class SubheaderComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idsubheader',  id);
+      const param = new FormData();
+      param.append('idsubheader',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'subheader/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'subheader/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -858,11 +858,6 @@ export class SubheaderComponent {
       this.page = parseInt(this.page) + 1;
       this.listData();
     }, 500);
-  }
-
-  async downloadexcel(){
-    var header = ['Id header',  'Header']
-    this.excel.generateExcel('Data header', 'header', header, this.isidata)
   }
 
   //select Rumus

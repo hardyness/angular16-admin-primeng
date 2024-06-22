@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { HttpHeaders } from '@angular/common/http';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-seo',
@@ -14,7 +14,7 @@ const sesilogin = 'masterkbmv4_login';
 })
 export class SeoComponent {
    //sesi
-   sesiidlogin: any;
+   sesiidakun: any;
    sesiusername: any;
    sesitoken: any;
    sesinama: any;
@@ -59,7 +59,7 @@ export class SeoComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -75,7 +75,7 @@ export class SeoComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'seo/data', {headers}).subscribe((res: any) => {
@@ -121,16 +121,16 @@ export class SeoComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('seo', combinedseo);
+        const param = new FormData();
+        param.append('seo', combinedseo);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-          this.api.postData(paramPerbarui, 'seo/perbarui', {headers}).subscribe((res: any) => {
+          this.api.postData(param, 'seo/perbarui', {headers}).subscribe((res: any) => {
             if (res.status == 1){
               this.loadingButton = false;
               this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

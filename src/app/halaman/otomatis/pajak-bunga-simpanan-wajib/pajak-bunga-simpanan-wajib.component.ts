@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { HttpHeaders } from '@angular/common/http';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-pajak-bunga-simpanan-wajib',
@@ -24,7 +24,7 @@ export class PajakBungaSimpananWajibComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -114,7 +114,7 @@ export class PajakBungaSimpananWajibComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -130,7 +130,7 @@ export class PajakBungaSimpananWajibComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'pajaksimpananwajib/list', {headers}).subscribe((res: any) => {
@@ -170,7 +170,7 @@ export class PajakBungaSimpananWajibComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'pajaksimpananwajib/cek', {headers}).subscribe((res: any) => {
@@ -209,7 +209,7 @@ export class PajakBungaSimpananWajibComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'pajaksimpananwajib/selectdebitpajaksimpananwajib', {headers}).subscribe((res: any) => {
@@ -271,7 +271,7 @@ export class PajakBungaSimpananWajibComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'pajaksimpananwajib/selectkreditpajaksimpananwajib', {headers}).subscribe((res: any) => {
@@ -334,16 +334,16 @@ export class PajakBungaSimpananWajibComponent {
       return false
     } else {
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('iddebit', this.idselectdebit);
+        const param = new FormData();
+        param.append('iddebit', this.idselectdebit);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'pajaksimpananwajib/tambahdebitpajaksimpananwajib', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'pajaksimpananwajib/tambahdebitpajaksimpananwajib', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -382,16 +382,16 @@ export class PajakBungaSimpananWajibComponent {
       return false
     } else {
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('idkredit', this.idselectkredit);
+        const param = new FormData();
+        param.append('idkredit', this.idselectkredit);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'pajaksimpananwajib/tambahkreditpajaksimpananwajib', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'pajaksimpananwajib/tambahkreditpajaksimpananwajib', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});

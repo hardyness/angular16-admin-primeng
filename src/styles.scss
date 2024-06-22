@@ -44,6 +44,12 @@ $gutter: 1rem; //for primeflex grid system
   background-color: white;
 }
 
+.divdisabled
+{
+  pointer-events: none; 
+  opacity: 0.7;
+}
+
 // .bgtopbar {
 //   background: url('assets/bg/badak-sidebar.png');
 //   background-repeat: no-repeat;
@@ -54,6 +60,61 @@ $gutter: 1rem; //for primeflex grid system
 
 .bg-primary-thin {
   background-color: #ddeffd !important;
+}
+
+.widetablecol {
+  width: auto;
+  white-space: nowrap;
+}
+
+.tinytablecol {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.orderdata {
+  cursor: pointer;
+}
+
+.orderdata:hover {
+  color: blue !important;
+}
+
+.responsive-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.total-data-label {
+  margin: auto 0;
+  text-align: center;
+}
+
+.paginator-responsive {
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .responsive-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button-group, .total-data-label, .paginator-responsive {
+    // width: 100%;
+    text-align: center;
+  }
+
+  .p-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 
 

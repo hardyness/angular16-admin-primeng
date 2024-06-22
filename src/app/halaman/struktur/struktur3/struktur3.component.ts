@@ -5,10 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-struktur3',
@@ -36,7 +36,7 @@ export class Struktur3Component {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -104,7 +104,7 @@ export class Struktur3Component {
     private fb: FormBuilder,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService
   ) {}
 
@@ -149,7 +149,7 @@ export class Struktur3Component {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -167,7 +167,7 @@ export class Struktur3Component {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'struktur3/list', {headers}).subscribe((res: any) => {
@@ -223,7 +223,7 @@ export class Struktur3Component {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'struktur3/cek', {headers}).subscribe((res: any) => {
@@ -261,7 +261,7 @@ export class Struktur3Component {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'struktur3/selectstruktur3', {headers}).subscribe((res: any) => {
@@ -324,17 +324,17 @@ export class Struktur3Component {
     } else {
       var bagihasil: any = this.formStruktur2.value.bagihasil
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('struktur1', this.idselectstruktur1);
-        paramTambah.append('bagihasil', bagihasil);
+        const param = new FormData();
+        param.append('struktur1', this.idselectstruktur1);
+        param.append('bagihasil', bagihasil);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'struktur3/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'struktur3/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -386,7 +386,7 @@ export class Struktur3Component {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'struktur3/data', {headers}).subscribe((res: any) => {
@@ -428,17 +428,17 @@ export class Struktur3Component {
     } else {
       
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idstruktur3',  this.idstruktur3);
-        paramPerbarui.append('struktur1', this.idselectstruktur1);
+        const param = new FormData();
+        param.append('idstruktur3',  this.idstruktur3);
+        param.append('struktur1', this.idselectstruktur1);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'struktur3/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'struktur3/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -482,16 +482,16 @@ export class Struktur3Component {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idstruktur3',  id);
+      const param = new FormData();
+      param.append('idstruktur3',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'struktur3/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'struktur3/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -614,11 +614,6 @@ export class Struktur3Component {
       this.page = parseInt(this.page) + 1;
       this.listData();
     }, 500);
-  }
-
-  async downloadexcel(){
-    var header = ['Id struktur1',  'Struktur1']
-    this.excel.generateExcel('Data struktur1', 'struktur1', header, this.isidata)
   }
 
   //event select

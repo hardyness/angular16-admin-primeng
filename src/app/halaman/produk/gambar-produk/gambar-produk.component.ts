@@ -9,7 +9,7 @@ import { FileUpload, UploadEvent } from 'primeng/fileupload';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-gambar-produk',
@@ -20,7 +20,7 @@ export class GambarProdukComponent {
   @ViewChild('vsTable') vsTable:Table;
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -126,7 +126,7 @@ export class GambarProdukComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -149,7 +149,7 @@ export class GambarProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'produk/gambarproduk/list', {headers}).subscribe((res: any) => {
@@ -200,17 +200,17 @@ export class GambarProdukComponent {
     this.loadingButton = true;
     this.unvalid = true;
     return new Promise (resolve => {
-      const paramTambah = new FormData();
-      paramTambah.append('idproduk', this.idproduk);
-      paramTambah.append('gambarproduk', this.selectedFiles[0]);
+      const param = new FormData();
+      param.append('idproduk', this.idproduk);
+      param.append('gambarproduk', this.selectedFiles[0]);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramTambah, 'produk/gambarproduk/tambah', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'produk/gambarproduk/tambah', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.loadingButton = false;
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -261,7 +261,7 @@ export class GambarProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(dataPerbarui, 'produk/gambarproduk/data', {headers}).subscribe((res: any) => {
@@ -296,20 +296,20 @@ export class GambarProdukComponent {
   async perbarui(){
     this.loadingButton = true;
     return new Promise (async resolve => {
-      const paramPerbarui = new FormData();
-      paramPerbarui.append('idproduk',  this.idproduk);
-      paramPerbarui.append('idgambarproduk', this.idgambar);
+      const param = new FormData();
+      param.append('idproduk',  this.idproduk);
+      param.append('idgambarproduk', this.idgambar);
       if(this.selectedNewfiles.get(1) !== undefined){
-        paramPerbarui.append('gambar', this.selectedNewfiles.get(1));
+        param.append('gambar', this.selectedNewfiles.get(1));
       }
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramPerbarui, 'produk/gambarproduk/perbarui', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'produk/gambarproduk/perbarui', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.loadingButton = false;
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -350,17 +350,17 @@ export class GambarProdukComponent {
 
   async hapusData(id){
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idproduk', this.idproduk);
-      paramHapus.append('idgambarproduk', id);
+      const param = new FormData();
+      param.append('idproduk', this.idproduk);
+      param.append('idgambarproduk', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'produk/gambarproduk/hapus', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'produk/gambarproduk/hapus', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -390,17 +390,17 @@ export class GambarProdukComponent {
 
   async coverGambar(id){
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idproduk', this.idproduk);
-      paramHapus.append('idgambarproduk', id);
+      const param = new FormData();
+      param.append('idproduk', this.idproduk);
+      param.append('idgambarproduk', id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramHapus, 'produk/gambarproduk/perbaruicover', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'produk/gambarproduk/perbaruicover', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();

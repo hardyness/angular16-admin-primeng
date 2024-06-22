@@ -1,32 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, tap, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private key: string;
 
   constructor(
     public router: Router,
-  ) { }
+  ) { 
+    this.key = 'wh-AES-secrt-key-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  }
 
 
-  async login(idlogin, username, nama, token, unik){
+  async login(data){
     this.isAuthenticated.next(true);
-    const data = {
-      sesiidlogin: idlogin,
-      sesiusername: username,
-      sesinama: nama,
-      sesitoken: token,
-      sesiunik: unik
-    };
-    localStorage.setItem(sesilogin, JSON.stringify(data));
+    localStorage.setItem(sesilogin, data);
   }
 
   async logout(){

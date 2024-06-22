@@ -64,7 +64,7 @@
             color: var(--text-color);
             cursor: pointer;
             padding: .75rem 1rem;
-            border-radius: $borderRadius;
+            // border-radius: $borderRadius;
             transition: background-color $transitionDuration, box-shadow $transitionDuration;
 
             .layout-menuitem-icon {
@@ -80,10 +80,14 @@
             &.active-route {
                 font-weight: 700;
                 color: var(--primary-color);
+                border-left-color: var(--primary-color);
+                border-left: 1px solid;
             }
 
             &:hover {
                 background-color: var(--surface-hover);
+                border-radius: $borderRadius;
+                border-left: 0px;
             }
 
             &:focus {
@@ -97,17 +101,20 @@
 
             li {
                 a {
-                    margin-left: 1rem;
+                    margin-left: 1.3rem;
+                    font-size: 90%;
                 }
 
                 li {
                     a {
                         margin-left: 2rem;
+                        font-size: 85%;
                     }
 
                     li {
                         a {
                             margin-left: 2.5rem;
+                            font-size: 80%;
                         }
 
                         li {

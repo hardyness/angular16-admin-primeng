@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimekitModule } from '../services/primekit/primekit.module';
-
 import { HalamanRoutingModule } from './halaman-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HalamanComponent } from './halaman.component';
@@ -30,11 +29,21 @@ import { AreaComponent } from './area/area.component';
 import { CoaComponent } from './coa/coa.component';
 import { SubheaderComponent } from './subheader/subheader.component';
 import { OtomatisModule } from './otomatis/otomatis.module';
+import { KategoribarangComponent } from './kategoribarang/kategoribarang.component';
+import { BarangComponent } from './barang/barang.component';
+import { SuplierComponent } from './suplier/suplier.component';
+import { BarangmasukComponent } from './barangmasuk/barangmasuk.component';
+import { CDK_DRAG_CONFIG } from '@angular/cdk/drag-drop';
 
+const DragConfig = {
+  dragStartThreshold: 0,
+  pointerDirectionChangeThreshold: 5,
+  zIndex: 10000
+}
 
 @NgModule({
   declarations: [
-    DashboardComponent, HalamanComponent, KatalogComponent, TentangKamiComponent, SeoComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent, TipepembiayaanComponent, AreaComponent, CoaComponent, SubheaderComponent,
+    DashboardComponent, HalamanComponent, KatalogComponent, TentangKamiComponent, SeoComponent, KontakComponent, KantorComponent, PekerjaanComponent, JaminanComponent, GolonganComponent, GajiLayoutComponent, HeaderComponent, TipepembiayaanComponent, AreaComponent, CoaComponent, SubheaderComponent, KategoribarangComponent, BarangComponent, SuplierComponent, BarangmasukComponent,
   ],
   imports: [
     CommonModule,
@@ -48,8 +57,8 @@ import { OtomatisModule } from './otomatis/otomatis.module';
     OtomatisModule,
     NgSelectModule,
     CustomautofocusModule,
-    GoogleMapsModule
+    GoogleMapsModule,
   ],
-  providers: [MessageService, ConfirmationService, ApiService]
+  providers: [MessageService, ConfirmationService, ApiService, { provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
 })
 export class HalamanModule { }

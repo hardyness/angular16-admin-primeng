@@ -6,9 +6,9 @@ import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms"
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
 import { NavigationExtras, Router } from '@angular/router';
-import { ExcelService } from 'src/app/services/excel.service';
 
-const sesilogin = 'masterkbmv4_login';
+
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-produk',
@@ -35,7 +35,7 @@ export class ProdukComponent {
   }
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -99,7 +99,7 @@ export class ProdukComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private route: Router,
-    private excel: ExcelService,
+
   ) {}
 
   async ngOnInit() {
@@ -136,7 +136,7 @@ export class ProdukComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -167,7 +167,7 @@ export class ProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'produk/list', {headers}).subscribe((res: any) => {
@@ -222,7 +222,7 @@ export class ProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(cekmenu, 'produk/cek', {headers}).subscribe((res: any) => {
@@ -260,7 +260,7 @@ export class ProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(param, 'produk/select', {headers}).subscribe((res: any) => {
@@ -325,21 +325,21 @@ export class ProdukComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('kategoriproduk', this.idkategori);
-        paramTambah.append('produk', produk);
-        paramTambah.append('kode', kode);
-        paramTambah.append('minimal', minimal);
-        paramTambah.append('harga', harga);
-        paramTambah.append('keterangan', keterangan);
+        const param = new FormData();
+        param.append('kategoriproduk', this.idkategori);
+        param.append('produk', produk);
+        param.append('kode', kode);
+        param.append('minimal', minimal);
+        param.append('harga', harga);
+        param.append('keterangan', keterangan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramTambah, 'produk/tambah', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'produk/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -388,7 +388,7 @@ export class ProdukComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.api.postData(dataPerbarui, 'produk/data', {headers}).subscribe((res: any) => {
@@ -448,22 +448,22 @@ export class ProdukComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idproduk',  this.idproduk);
-        paramPerbarui.append('kategoriproduk', this.idkategori);
-        paramPerbarui.append('produk', produk);
-        paramPerbarui.append('kode', kode);
-        paramPerbarui.append('minimal', minimal);
-        paramPerbarui.append('harga', harga);
-        paramPerbarui.append('keterangan', keterangan);
+        const param = new FormData();
+        param.append('idproduk',  this.idproduk);
+        param.append('kategoriproduk', this.idkategori);
+        param.append('produk', produk);
+        param.append('kode', kode);
+        param.append('minimal', minimal);
+        param.append('harga', harga);
+        param.append('keterangan', keterangan);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.api.postData(paramPerbarui, 'produk/perbarui', {headers}).subscribe((res: any) => {
+        this.api.postData(param, 'produk/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -516,16 +516,16 @@ export class ProdukComponent {
 
   async hapusData(id){
     return new Promise (async resolve => {
-      const paramPerbarui = new FormData();
-      paramPerbarui.append('idproduk',  id);
+      const param = new FormData();
+      param.append('idproduk',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': '2590AB083AAD0A4B2D092375F2F1B33A52B3CA922A9E24CF449DD00AB2567049',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.api.postData(paramPerbarui, 'produk/hapus', {headers}).subscribe((res: any) => {
+      this.api.postData(param, 'produk/hapus', {headers}).subscribe((res: any) => {
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
           this.auth.logout();
@@ -701,11 +701,6 @@ export class ProdukComponent {
       d: item.produk
     }};
     this.route.navigate(['produk/custom-produk/' + item.idproduk], navigationExtras)
-  }
-
-  async downloadexcel(){
-    var header = ['Id Produk', 'Kategori', 'Kode Produk', 'Nama Produk', 'Minimal', 'Harga', 'Keterangan']
-    this.excel.generateExcel('Data Produk', 'Produk', header, this.isidata)
   }
 
   //select event

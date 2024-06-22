@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Table } from 'primeng/table';
 import { HttpHeaders } from '@angular/common/http';
-import { ExcelService } from 'src/app/services/excel.service';
+
 import { NavigationEnd, NavigationExtras, NavigationStart, Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { Subject, filter, takeUntil } from 'rxjs';
@@ -13,7 +13,7 @@ import { LocaleSettings } from 'primeng/calendar';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 
-const sesilogin = 'masterkbmv4_login';
+const sesilogin = 'wh_login_proto';
 
 @Component({
   selector: 'app-pengguna',
@@ -47,7 +47,7 @@ export class PenggunaComponent {
   blockSpace: RegExp = /[^s]/;
 
   //sesi
-  sesiidlogin: any;
+  sesiidakun: any;
   sesiusername: any;
   sesitoken: any;
   sesinama: any;
@@ -64,7 +64,7 @@ export class PenggunaComponent {
   totalinput: any = 0;
   formPengguna: FormGroup;
   namaPengguna: any;
-  idlogin: any;
+  idakun: any;
 
   //loading
   load: any[] = [];
@@ -110,7 +110,7 @@ export class PenggunaComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private route: Router,
-    private excel: ExcelService,
+
     private layoutservice: LayoutService,
     public primengConfig: PrimeNGConfig,
     // public translate: TranslateService,
@@ -142,7 +142,7 @@ export class PenggunaComponent {
         this.cari = page_v.cari;
         this.listData();
         setTimeout(() => {
-          document.getElementById(page_v.idlogin).scrollIntoView({
+          document.getElementById(page_v.idakun).scrollIntoView({
             block: "center",
             inline: "nearest",
             });
@@ -174,7 +174,7 @@ export class PenggunaComponent {
   async loadStorage(){
     const sesi = localStorage.getItem(sesilogin);
     const sesivalue = JSON.parse(sesi);
-    this.sesiidlogin = sesivalue.sesiidlogin;
+    this.sesiidakun = sesivalue.sesiidakun;
     this.sesiusername = sesivalue.sesiusername;
     this.sesitoken = sesivalue.sesitoken;
     this.sesinama = sesivalue.sesinama;
@@ -192,7 +192,7 @@ export class PenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(param, 'pengguna/list', {headers}).subscribe((res: any) => {
@@ -248,7 +248,7 @@ export class PenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(cekmenu, 'pengguna/cek', {headers}).subscribe((res: any) => {
@@ -308,20 +308,20 @@ export class PenggunaComponent {
         return false
       }
       return new Promise (resolve => {
-        const paramTambah = new FormData();
-        paramTambah.append('username', usernamePengguna);
-        paramTambah.append('password', passwordPengguna);
-        paramTambah.append('nama', namaPengguna);
-        paramTambah.append('level', levelPengguna);
-        paramTambah.append('mulai', mulaiPengguna);
+        const param = new FormData();
+        param.append('username', usernamePengguna);
+        param.append('password', passwordPengguna);
+        param.append('nama', namaPengguna);
+        param.append('level', levelPengguna);
+        param.append('mulai', mulaiPengguna);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramTambah, 'pengguna/tambah', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'pengguna/tambah', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -373,7 +373,7 @@ export class PenggunaComponent {
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
       this.subHttp = this.api.postData(dataPerbarui, 'pengguna/data', {headers}).subscribe((res: any) => {
@@ -439,21 +439,21 @@ export class PenggunaComponent {
         return false
       }
       return new Promise (async resolve => {
-        const paramPerbarui = new FormData();
-        paramPerbarui.append('idpengguna',  this.idlogin);
-        paramPerbarui.append('username', usernamePengguna);
-        paramPerbarui.append('password', passwordPengguna);
-        paramPerbarui.append('nama', namaPengguna);
-        paramPerbarui.append('level', levelPengguna);
-        paramPerbarui.append('mulai', mulaiPengguna);
+        const param = new FormData();
+        param.append('idpengguna',  this.idakun);
+        param.append('username', usernamePengguna);
+        param.append('password', passwordPengguna);
+        param.append('nama', namaPengguna);
+        param.append('level', levelPengguna);
+        param.append('mulai', mulaiPengguna);
         var headers = new HttpHeaders({
           'x-access-token': this.sesitoken,
           'x-access-unik': this.sesiunik,
           'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-          'sesiidlogin': this.sesiidlogin,
+          'sesiidakun': this.sesiidakun,
           'sesiusername': this.sesiusername,
         });
-        this.subHttp = this.api.postData(paramPerbarui, 'pengguna/perbarui', {headers}).subscribe((res: any) => {
+        this.subHttp = this.api.postData(param, 'pengguna/perbarui', {headers}).subscribe((res: any) => {
           if (res.status == 1){
             this.loadingButton = false;
             this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -471,7 +471,7 @@ export class PenggunaComponent {
             this.popForm = false;
             this.totalinput = 0;
             this.listData();
-            let index = this.isidata.findIndex(item => item.idpengguna === this.idlogin);
+            let index = this.isidata.findIndex(item => item.idpengguna === this.idakun);
             if (index !== -1) {
               this.isidata[index].pengguna = namaPengguna;
               this.isidata[index].username = usernamePengguna;
@@ -501,16 +501,16 @@ export class PenggunaComponent {
   async hapusData(id){
     this.loadingHapus = id;
     return new Promise (async resolve => {
-      const paramHapus = new FormData();
-      paramHapus.append('idpengguna',  id);
+      const param = new FormData();
+      param.append('idpengguna',  id);
       var headers = new HttpHeaders({
         'x-access-token': this.sesitoken,
         'x-access-unik': this.sesiunik,
         'akses': 'C9AC27E0492481C5E07CA7DF996811B1',
-        'sesiidlogin': this.sesiidlogin,
+        'sesiidakun': this.sesiidakun,
         'sesiusername': this.sesiusername,
       });
-      this.subHttp = this.api.postData(paramHapus, 'pengguna/hapus', {headers}).subscribe((res: any) => {
+      this.subHttp = this.api.postData(param, 'pengguna/hapus', {headers}).subscribe((res: any) => {
         this.loadingHapus = false;
         if (res.status == 1){
           this.messageService.add({severity: 'error', summary: res.pesan, detail: 'Akses Anda ditolak!'});
@@ -521,7 +521,7 @@ export class PenggunaComponent {
           this.messageService.add({severity: 'success', summary: res.pesan, detail: 'Anda berhasil menghapus data Pengguna!'});
           this.totalinput = 0;
           this.listData();
-          var index = this.isidata.findIndex(item => item.idlogin === id);
+          var index = this.isidata.findIndex(item => item.idakun === id);
           if (index !== -1){
             this.isidata.splice(index, 1)
           }
@@ -543,7 +543,7 @@ export class PenggunaComponent {
   }
 
   async konfirmHapus(id, target){
-    this.idlogin = id.idpengguna;
+    this.idakun = id.idpengguna;
     this.confirmationService.confirm({
       target: target,
       message: 'yakin ingin menghapus ' + id.nama + '?',
@@ -599,7 +599,7 @@ export class PenggunaComponent {
       this.tambah()
     } else if (param == 4){
       this.formGagal = false
-      this.dataList(this.idlogin)
+      this.dataList(this.idakun)
     } else if (param == 5){
       this.formGagal = false
       this.perbarui()
@@ -612,7 +612,7 @@ export class PenggunaComponent {
       scrl: this.scrollTable,
       isi: this.isidata,
       page: this.page,
-      idlogin: item.idpengguna
+      idakun: item.idpengguna
     }
     localStorage.setItem('pagingPengguna', JSON.stringify(dataPage));
     const navigationExtras: NavigationExtras = {
@@ -651,7 +651,7 @@ export class PenggunaComponent {
       this.dataLevelPengguna;
       console.log(this.dataLevelPengguna)
       this.namaForm = 'Perbarui Data Pengguna';
-      this.idlogin = p1.idpengguna;
+      this.idakun = p1.idpengguna;
     }
   }
 
@@ -691,8 +691,4 @@ export class PenggunaComponent {
     return null;
   }
 
-  async downloadexcel(){
-    var header = ['Id pengguna',  'Pengguna']
-    this.excel.generateExcel('Data pengguna', 'pengguna', header, this.isidata)
-  }
 }

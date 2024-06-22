@@ -26,7 +26,7 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class LoginComponent {
   @ViewChild('passWord') passWord: Password;
-  titleHalaman = 'Login Master - KBM Internal';
+  titleHalaman = 'Login Master - Warehouse (proto)';
   valCheck: string[] = ['remember'];
 
   username: '';
@@ -101,7 +101,7 @@ export class LoginComponent {
         parameter.append('username', username);
         parameter.append('password', password);
     
-        const res: any = await this.Api.postData(parameter, 'login/cek', { headers }).toPromise();
+        const res: any = await this.Api.postData(parameter, 'akun/login', { headers }).toPromise();
         if (el) {
           el.style['display'] = 'none';
         }
@@ -109,8 +109,8 @@ export class LoginComponent {
           this.pesanToast('error', res.pesan, 'Username/Password Salah!');
         } else if (res.status === 99) {
           this.pesanToast('success', res.pesan, '');
-          await this.Auth.login(res.idlogin, res.username, res.nama, res.token, res.unik);
-          this.route.navigateByUrl('/kantor');
+          this.Auth.login(res.data)
+          this.route.navigateByUrl('/suplier?p=1');
         }
       }
 
